@@ -140,7 +140,7 @@ class WorldUI:
     """
     Add the heavy and light items to the conveyor
     """
-    self.reset_world()
+    self.reset_world();
     origin_lX = self.convL.origin[0] + self.convL.length - self.itemL.length*1.5
     origin_lY = self.convL.origin[1] + 0.5*(self.convL.height - self.itemL.height)
     for i in range(n_light):
@@ -160,16 +160,23 @@ class WorldUI:
     It assumes that the world state has a field Robot with its pose.
     It assumes that the world state has fields Nr. of Heavy/Light objects in the conveyors.
     """
-    self.print_items(self, world_state.n_light, world_state.n_heavy)
-    self.print_robot(self, world_state.robot)
+    self.add_items(self, world_state.n_light, world_state.n_heavy)
+    self.add_robot(self, world_state.robot)
 
 
-  def print_world(self, name):
+  def save_world(self, name):
     """
-    Print the world with added patches.
+    Save the world with added patches to file.
     """
     self.axes.plot()
     path = './tests/' + name + '.svg'
     self.figure.savefig(path)
     plt.close(self.figure)
+
+  def print_world(self):
+    """
+    Save the world with added patches to file.
+    """
+    self.axes.plot();
+    self.figure.show()
 

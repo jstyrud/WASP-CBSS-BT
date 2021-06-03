@@ -36,7 +36,7 @@ def test_reset():
     """
     world = ui.WorldUI()
     world.reset_world()
-    world.print_world('empty_world')
+    world.save_world('empty_world')
     plt.close()
 
 def test_robot():
@@ -53,9 +53,9 @@ def test_robot():
     world = ui.WorldUI()
     world.reset_world()
     world.add_robot((2,7.5))
-    world.print_world('robot')
+    world.save_world('robot')
     world.reset_world()
-    world.print_world('empty_again')
+    world.save_world('empty_again')
     plt.close()
 
 def test_items():
@@ -66,14 +66,27 @@ def test_items():
     world = ui.WorldUI()
     world.reset_world()
     world.add_items(2, 3)
-    world.print_world('items')
+    world.save_world('items')
     world.reset_world()
-    world.print_world('empty_again')
+    world.save_world('empty_again')
     plt.close()
 
-def test_output():
+def test_items():
     """
-    Test if a figure can be output.
+    Test the add items function.
+    The feedback is visual, very few assertions.
+    """
+    world = ui.WorldUI()
+    world.reset_world()
+    world.add_items(2, 3)
+    world.save_world('items')
+    world.reset_world()
+    world.save_world('empty_again')
+    plt.close()
+
+def test_get():
+    """
+    Test if a figure can be returned with the get method.
     """
     plt.cla()
     plt.clf()
@@ -82,3 +95,13 @@ def test_output():
     fig, ax = world.get_figure()
     ax.plot()
     plt.show()
+
+def test_print():
+    """
+    Test if a figure can be output.
+    """
+    plt.cla()
+    plt.clf()
+    world = ui.WorldUI()
+    world.reset_world()
+    world.print_world()

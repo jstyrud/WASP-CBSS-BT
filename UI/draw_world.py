@@ -13,19 +13,27 @@ from matplotlib.patches import RegularPolygon, Rectangle
 class WorldSatate:
   """ Example of the worldstate to make the rest work """
   #TODO: place it somewhere else and import
-  def __init__(self):
+  def __init__(self, origin=(0,0), light=0, heavy=0):
     """
     Initialize the object with origin, dimension and graphical properties.
     """
-    self.robot = (0,0)
-    self.n_light = 0
-    self.n_heavy = 0
+    self.robot = origin
+    self.n_light = light
+    self.n_heavy = heavy
 
   def set_origin(self, x, y):
     """
     Function to set the pose of the robot.
     """
     self.robot = (x, y)
+
+  def set_items(self, l, h):
+    """
+    Function to set the number of the item in the world state.
+    """
+    self.n_light = l
+    self.n_heavy = h
+
 #TODO: it assumes an object called world_state is defined somewhere --> TO BE IMPORTED
 # the world state describes:
 # - pose of the robot
@@ -140,7 +148,7 @@ class WorldUI:
     """
     Add the heavy and light items to the conveyor
     """
-    self.reset_world();
+    self.reset_world()
     origin_lX = self.convL.origin[0] + self.convL.length - self.itemL.length*1.5
     origin_lY = self.convL.origin[1] + 0.5*(self.convL.height - self.itemL.height)
     for i in range(n_light):
@@ -160,8 +168,9 @@ class WorldUI:
     It assumes that the world state has a field Robot with its pose.
     It assumes that the world state has fields Nr. of Heavy/Light objects in the conveyors.
     """
-    self.add_items(self, world_state.n_light, world_state.n_heavy)
-    self.add_robot(self, world_state.robot)
+    
+    self.add_items(world_state.n_light, world_state.n_heavy)
+    self.add_robot(world_state.robot)
 
 
   def save_world(self, name):
@@ -177,6 +186,5 @@ class WorldUI:
     """
     Save the world with added patches to file.
     """
-    self.axes.plot();
-    self.figure.show()
+    self.axes.plot()
 

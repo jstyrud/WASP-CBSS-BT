@@ -75,8 +75,6 @@ def test_output():
     """
     Test if a figure can be output.
     """
-    plt.cla()
-    plt.clf()
     world = ui.WorldUI()
     world.reset_world()
     fig, ax = world.get_figure()

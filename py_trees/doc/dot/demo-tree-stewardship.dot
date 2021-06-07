@@ -1,0 +1,40 @@
+digraph pastafarianism {
+graph [fontname="times-roman"];
+node [fontname="times-roman"];
+edge [fontname="times-roman"];
+"Demo Tree" [label="Demo Tree", shape=octagon, style=filled, fillcolor=cyan, fontsize=9, fontcolor=black];
+EveryN [label=EveryN, shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+"Demo Tree" -> EveryN;
+Sequence [label=Sequence, shape=box, style=filled, fillcolor=orange, fontsize=9, fontcolor=black];
+"Demo Tree" -> Sequence;
+Guard [label=Guard, shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+Sequence -> Guard;
+Periodic [label=Periodic, shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+Sequence -> Periodic;
+Finisher [label=Finisher, shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+Sequence -> Finisher;
+subgraph  {
+label=children_of_Sequence;
+rank=same;
+Guard [label=Guard, shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+Periodic [label=Periodic, shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+Finisher [label=Finisher, shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+}
+
+Idle [label=Idle, shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+"Demo Tree" -> Idle;
+subgraph  {
+label="children_of_Demo Tree";
+rank=same;
+EveryN [label=EveryN, shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+Sequence [label=Sequence, shape=box, style=filled, fillcolor=orange, fontsize=9, fontcolor=black];
+Idle [label=Idle, shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+}
+
+count [label="count: -", shape=box, style=filled, color=blue, fillcolor=white, fontsize=8, fontcolor=blue, width=0, height=0, fixedsize=False];
+count -> Finisher  [color=blue, constraint=False];
+EveryN -> count  [color=blue, constraint=True];
+period [label="period: -", shape=box, style=filled, color=blue, fillcolor=white, fontsize=8, fontcolor=blue, width=0, height=0, fixedsize=False];
+period -> Finisher  [color=blue, constraint=False];
+Periodic -> period  [color=blue, constraint=True];
+}

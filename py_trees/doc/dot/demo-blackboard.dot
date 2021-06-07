@@ -1,0 +1,37 @@
+digraph pastafarianism {
+graph [fontname="times-roman"];
+node [fontname="times-roman"];
+edge [fontname="times-roman"];
+"Blackboard Demo" [label="Blackboard Demo", shape=box, style=filled, fillcolor=orange, fontsize=9, fontcolor=black];
+"Set Nested" [label="Set Nested", shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+"Blackboard Demo" -> "Set Nested";
+Writer [label=Writer, shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+"Blackboard Demo" -> Writer;
+"Check Nested Foo" [label="Check Nested Foo", shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+"Blackboard Demo" -> "Check Nested Foo";
+ParamsAndState [label=ParamsAndState, shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+"Blackboard Demo" -> ParamsAndState;
+subgraph  {
+label="children_of_Blackboard Demo";
+rank=same;
+"Set Nested" [label="Set Nested", shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+Writer [label=Writer, shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+"Check Nested Foo" [label="Check Nested Foo", shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+ParamsAndState [label=ParamsAndState, shape=ellipse, style=filled, fillcolor=gray, fontsize=9, fontcolor=black];
+}
+
+Configuration [label=Configuration, shape=ellipse, style=filled, color=blue, fillcolor=gray, fontsize=7, fontcolor=blue];
+"/dude" [label="/dude: Bob", shape=box, style=filled, color=blue, fillcolor=white, fontsize=8, fontcolor=blue, width=0, height=0, fixedsize=False];
+"/dude" -> Writer  [color=blue, constraint=False];
+Configuration -> "/dude"  [color=blue, constraint=False];
+"/parameters/default_speed" [label="/parameters/default_speed: 30.0", shape=box, style=filled, color=blue, fillcolor=white, fontsize=8, fontcolor=blue, width=0, height=0, fixedsize=False];
+"/parameters/default_speed" -> ParamsAndState  [color=blue, constraint=False];
+Configuration -> "/parameters/default_speed"  [color=blue, constraint=False];
+"/nested" [label="/nested: -", shape=box, style=filled, color=blue, fillcolor=white, fontsize=8, fontcolor=blue, width=0, height=0, fixedsize=False];
+"/nested" -> "Check Nested Foo"  [color=blue, constraint=False];
+"Set Nested" -> "/nested"  [color=blue, constraint=True];
+"/spaghetti" [label="/spaghetti: -", shape=box, style=filled, color=blue, fillcolor=white, fontsize=8, fontcolor=blue, width=0, height=0, fixedsize=False];
+Writer -> "/spaghetti"  [color=blue, constraint=True];
+"/state/current_speed" [label="/state/current_speed: -", shape=box, style=filled, color=blue, fillcolor=white, fontsize=8, fontcolor=blue, width=0, height=0, fixedsize=False];
+ParamsAndState -> "/state/current_speed"  [color=blue, constraint=True];
+}

@@ -1,0 +1,26 @@
+digraph oneshot {
+graph [fontname="times-roman"];
+node [fontname="times-roman"];
+edge [fontname="times-roman"];
+OneShot [fillcolor=cyan, fontcolor=black, fontsize=11, shape=octagon, style=filled];
+"Oneshot w/ Guard" [fillcolor=orange, fontcolor=black, fontsize=11, shape=box, style=filled];
+OneShot -> "Oneshot w/ Guard";
+"Not Completed?" [fillcolor=ghostwhite, fontcolor=black, fontsize=11, shape=ellipse, style=filled];
+"Oneshot w/ Guard" -> "Not Completed?";
+"Completed?" [fillcolor=gray, fontcolor=black, fontsize=11, shape=ellipse, style=filled];
+"Not Completed?" -> "Completed?";
+Sequence [fillcolor=orange, fontcolor=black, fontsize=11, shape=box, style=filled];
+"Oneshot w/ Guard" -> Sequence;
+Guard [fillcolor=gray, fontcolor=black, fontsize=11, shape=ellipse, style=filled];
+Sequence -> Guard;
+"Action 1" [fillcolor=gray, fontcolor=black, fontsize=11, shape=ellipse, style=filled];
+Sequence -> "Action 1";
+"Action 2" [fillcolor=gray, fontcolor=black, fontsize=11, shape=ellipse, style=filled];
+Sequence -> "Action 2";
+"Action 3" [fillcolor=gray, fontcolor=black, fontsize=11, shape=ellipse, style=filled];
+Sequence -> "Action 3";
+"Mark Done\n[SUCCESS]" [fillcolor=gray, fontcolor=black, fontsize=11, shape=ellipse, style=filled];
+Sequence -> "Mark Done\n[SUCCESS]";
+"Oneshot Result" [fillcolor=gray, fontcolor=black, fontsize=11, shape=ellipse, style=filled];
+OneShot -> "Oneshot Result";
+}

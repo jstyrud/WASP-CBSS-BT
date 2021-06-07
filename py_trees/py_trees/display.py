@@ -388,7 +388,7 @@ def dot_tree(
         if isinstance(node, composites.Chooser):
             attributes = ('doubleoctagon', 'cyan', 'black')  # octagon
         elif isinstance(node, composites.Selector):
-            attributes = ('octagon', 'cyan', 'black')  # octagon
+            attributes = ('octagon', 'red', 'black')  # octagon
             if node.status.value is not 'INVALID':
                 attributes[1] = get_status_color(node)
         elif isinstance(node, composites.Sequence):

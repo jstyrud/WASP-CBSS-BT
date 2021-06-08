@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # License: BSD
 #   https://raw.githubusercontent.com/splintered-reality/py_trees/devel/LICENSE
@@ -41,6 +41,7 @@ def pre_tick_handler(behaviour_tree):
         behaviour_tree (:class:`~py_trees.trees.BehaviourTree`): the tree custodian
     """
     print("\n--------- Run %s ---------\n" % behaviour_tree.count)
+
 
 
 def post_tick_handler(snapshot_visitor, behaviour_tree):
@@ -97,7 +98,6 @@ def main():
     """
     py_trees.logging.level = py_trees.logging.Level.DEBUG
     root = create_root()
-    
 
     ####################
     # Tree Stewardship

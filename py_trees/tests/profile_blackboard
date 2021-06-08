@@ -1,4 +1,0 @@
-#!/bin/bash
-
-python3 -m cProfile -s cumtime -o blackboard.cprofile benchmark_blackboard.py
-pyprof2calltree -k -i blackboard.cprofile

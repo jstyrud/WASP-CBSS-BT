@@ -57,8 +57,8 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
             previously_visited=snapshot_visitor.previously_visited
         )
     )
-    name_ = 'root' + str(behaviour_tree.count)
-    py_trees.display.render_dot_tree(behaviour_tree.root, name=name_, target_directory=log_path)
+    name_ = 'running' + str(behaviour_tree.count)
+    py_trees.display.render_dot_tree(behaviour_tree.root, name=name_, target_directory=log_path, static=False)
 
 
 def create_root():
@@ -112,6 +112,7 @@ def main():
     behaviour_tree.visitors.append(snapshot_visitor)
     behaviour_tree.setup(timeout=15)
 
+    py_trees.display.render_dot_tree(behaviour_tree.root, name='static', target_directory=log_path, static=True)
 
     for unused_i in range(1, 11):
         behaviour_tree.tick()

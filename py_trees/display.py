@@ -421,9 +421,9 @@ def dot_tree(
         elif isinstance(node, decorators.Decorator):
             if not static:
                 color_ = get_status_color(node)
-                attributes = ('ellipse', color_, 'black')
+                attributes = ('diamond', color_, 'black')
             else:
-                attributes = ('ellipse', 'ghostwhite', 'black')
+                attributes = ('diamond', 'ghostwhite', 'black')
         else: # Conditions and Actions
             if not static:
                 color_ = get_status_color(node)

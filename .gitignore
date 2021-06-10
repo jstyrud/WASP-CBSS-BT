@@ -130,3 +130,22 @@ dmypy.json
 
 # Logs extensions
 logs/
+
+!.gitignore
+.vs
+env
+logs
+duplo
+Showcase
+*.sqlite
+*.sln
+*.pyproj
+*.dot
+*.png
+*.svg
+*.pdf
+*.coverage
+*.pyperf
+*.mp4
+__pycache__
+TestResults

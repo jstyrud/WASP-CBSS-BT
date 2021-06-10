@@ -28,11 +28,13 @@ import time
 
 import py_trees.console as console
 
+import os 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+log_path = os.path.join(dir_path, 'logs')
+
 ##############################################################################
 # Classes
 ##############################################################################
-
-
 
 def pre_tick_handler(behaviour_tree):
     """
@@ -56,7 +58,7 @@ def post_tick_handler(snapshot_visitor, behaviour_tree):
         )
     )
     name_ = 'root' + str(behaviour_tree.count)
-    py_trees.display.render_dot_tree(behaviour_tree.root, name=name_, target_directory= '/home/semaiov/Documents/wasp_summer21/WASP-CBSS-BT/py_trees/tests/logs')
+    py_trees.display.render_dot_tree(behaviour_tree.root, name=name_, target_directory=log_path)
 
 
 def create_root():
@@ -113,8 +115,6 @@ def main():
 
     for unused_i in range(1, 11):
         behaviour_tree.tick()
-        #name_ = 'root' + str(unused_i)
-        #py_trees.display.render_dot_tree(behaviour_tree.root, name=name_, target_directory= '/home/semaiov/Documents/wasp_summer21/WASP-CBSS-BT/py_trees/py_trees/tests')
 
     print("\n")
 

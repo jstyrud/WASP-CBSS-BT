@@ -3,8 +3,9 @@
 Test routines for the UI
 """
 
-import UI.draw_world as ui
 import matplotlib.pyplot as plt
+import UI.draw_world as ui
+
 
 def test_object():
     """
@@ -75,16 +76,16 @@ def test_state():
     """
     Test figures printing with state object.
     """
-    state = ui.WorldSatate((23,12), 7, 4)
+    state = ui.WorldSatate((23, 12), 7, 4)
     world = ui.WorldUI()
     world.add_state(state)
     world.save_world('state')
     plt.close()
 
-    state.set_origin(21,7.5)
-    state.set_items(3,4)
+    state.set_origin(21, 7.5)
+    state.set_items(3, 4)
     world.add_state(state)
-    world.save_world('new_state')
+    world.save_world('UI/tests/new_state')
     plt.close()
 
 def test_print():
@@ -101,6 +102,6 @@ def test_get():
     """
     world = ui.WorldUI()
     world.reset_world()
-    fig, ax = world.get_figure()
+    _, ax = world.get_figure()
     ax.plot()
-    plt.show()
+    plt.show(block=False)

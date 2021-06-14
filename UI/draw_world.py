@@ -62,8 +62,6 @@ class WorldUI:
         """
         Reset the world with static objects and robot in home position.
         """
-        plt.cla()
-        plt.clf()
         self.figure, self.axes = plt.subplots()
 
         # add the Map
@@ -161,6 +159,6 @@ class WorldUI:
 
     def print_world(self):
         """
-        Save the world with added patches to file.
+        Plot the world with added patches to file.
         """
         self.axes.plot()

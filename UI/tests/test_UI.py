@@ -5,6 +5,7 @@ Test routines for the UI
 
 import matplotlib.pyplot as plt
 import UI.draw_world as ui
+import simulation.conveyor_kitting as simulation
 
 def test_object():
     """
@@ -75,14 +76,15 @@ def test_state():
     """
     Test figures printing with state object.
     """
-    state = ui.WorldSatate((23, 12), 7, 4)
+    state = simulation.WorldState((23, 12), 7, 4)
     world = ui.WorldUI()
     world.add_state(state)
     world.save_world('state')
     plt.close()
 
-    state.set_origin(21, 7.5)
-    state.set_items(3, 4)
+    state.robot_pos = (21, 7.5)
+    state.cnv_n_light = 3
+    state.cnv_n_heavy = 4
     world.add_state(state)
     world.save_world('UI/tests/new_state')
     plt.close()

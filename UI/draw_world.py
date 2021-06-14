@@ -178,7 +178,6 @@ class WorldUI:
         It assumes that the world state has a field Robot with its pose.
         It assumes that the world state has fields Nr. of Heavy/Light objects in the conveyors.
         """
-
         self.add_items(world_state.n_light, world_state.n_heavy)
         self.add_robot(world_state.robot)
 
@@ -194,6 +193,6 @@ class WorldUI:
 
     def print_world(self):
         """
-        Save the world with added patches to file.
+        Plot the world with added patches to file.
         """
         self.axes.plot()

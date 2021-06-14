@@ -95,8 +95,6 @@ class WorldUI:
         """
         Reset the world with static objects and robot in home position.
         """
-        plt.cla()
-        plt.clf()
         self.figure, self.axes = plt.subplots()
 
         # add the Map

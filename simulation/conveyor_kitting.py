@@ -9,11 +9,12 @@ MAX_BATTERY = 100
 MAX_WEIGHT = 10
 HEAVY_WEIGHT = 3
 LIGHT_WEIGHT = 1
+ROBOT_SPEED = 5
 
 @dataclass
-class RobotPos:
+class Pos:
     """
-    Robot position
+    Position
     """
     x: float = 0
     y: float = 0
@@ -23,13 +24,15 @@ class WorldState:
     """
     The complete world state:
     """
-    robot_pos: RobotPos = (0, 0)
+    robot_pos: Pos = Pos(0, 0)
     battery_level: int = MAX_BATTERY
     carried_weight: int = 0
     carried_light: int = 0
     carried_heavy: int = 0
     cnv_n_light: int = 0 #Number of light objects currently on conveyor
     cnv_n_heavy: int = 0 #Number of heavy objects currently on conveyor
+    delivered_heavy: int = 0
+    delivered_light: int = 0
 
 class Stations(IntEnum):
     """ Indices for robot stations """
@@ -51,46 +54,85 @@ def get_station_from_string(string):
         return Stations.CONVEYOR_LIGHT
     if 'DELIVERY' in string:
         return Stations.DELIVERY
-    else:
-        return -1
 
-def get_pose(station):
+    return -1
+
+def get_pos(station):
     """
     Returns pose of given station
     """
     if station == Stations.CHARGE1:
-        return (2, 7.5)
+        return Pos(2, 7.5)
     if station == Stations.CHARGE2:
-        return (23, 12)
+        return Pos(23, 12)
     if station == Stations.CONVEYOR_HEAVY:
-        return (12, 12)
+        return Pos(12, 12)
     if station == Stations.CONVEYOR_LIGHT:
-        return (12, 3)
+        return Pos(12, 3)
     if station == Stations.DELIVERY:
-        return (21, 7.5)
+        return Pos(21, 7.5)
     print("ERROR, invalid station")
-    return (0, 0)
+    return Pos(0, 0)
 
-class PathPlanner:
+def move_towards(station, state):
     """
-    Super simple silly path planner
+    Moves towards given station
+    with super simple silly path planning
     """
+    station_pos = get_pos(station)
+    if state.robot_pos != station_pos:
+        if state.robot_pos.y != station_pos.y:
+            if state.robot_pos.x != station_pos.x and \
+               (state.robot_pos.x < 12 or state.robot_pos.x > 21):
+                move_towards_x(state.robot_pos, station_pos)
+            else:
+                move_towards_y(state.robot_pos, station_pos)
+        elif state.robot_pos.x != station_pos.x:
+            move_towards_x(state.robot_pos, station_pos)
+        state.battery_level -= 1
 
-    def move_towards(self, station, state):
-        """
-        Moves towards given station
-        """
-        if state.robot_pos != get_pose(station):
-            state.robot_pos = get_pose(station)
+def move_towards_x(robot_pos, station_pos):
+    """
+    Move towards station in x direction
+    """
+    if robot_pos.x < station_pos.x:
+        robot_pos.x = min(robot_pos.x + ROBOT_SPEED, station_pos.x)
+    else:
+        robot_pos.x = max(robot_pos.x - ROBOT_SPEED, station_pos.x)
+
+def move_towards_y(robot_pos, station_pos):
+    """
+    Move towards station in y direction
+    """
+    if robot_pos.y < station_pos.y:
+        robot_pos.y = min(robot_pos.y + ROBOT_SPEED, station_pos.y)
+    else:
+        robot_pos.y = max(robot_pos.y - ROBOT_SPEED, station_pos.y)
 
 class Simulation:
     """
-
+    Main simulation class
     """
     def __init__(self, seed=0):
         self.state = WorldState()
-        self.path_planner = PathPlanner()
         random.seed(seed)
+        self.ready_for_action = True #At most one action each tick
+
+    def get_feedback(self):
+        # pylint: disable=no-self-use
+        """ Dummy to fit template """
+        self.ready_for_action = True
+        return True
+
+    def get_sensor_data(self):
+         # pylint: disable=no-self-use
+        """ Dummy to fit template """
+        return True
+
+    def send_references(self):
+         # pylint: disable=no-self-use
+        """ Dummy to fit template """
+        return
 
     def step(self):
         """
@@ -98,12 +140,20 @@ class Simulation:
         """
 
         #Randomly add objects on conveyor
+        if random.random() < 0.05:
+            self.state.cnv_n_heavy += 1
+        if random.random() < 0.1:
+            self.state.cnv_n_light += 1
+
         #Deplete battery
         self.state.battery_level -= 1
 
+        #Only one action per tick
+        self.ready_for_action = False
+
     def at_station(self, station):
         """ Checks if robot is currently at given station """
-        return self.state.robot_pos == get_pose(station)
+        return self.state.robot_pos == get_pos(station)
 
     def idle(self):
         """
@@ -115,12 +165,11 @@ class Simulation:
         """
         Robot attemps to charge at station
         """
-        if self.state.robot_pos == get_pose(Stations.CHARGE1) or \
-           self.state.robot_pos == get_pose(Stations.CHARGE2):
+        if self.state.robot_pos == get_pos(Stations.CHARGE1) or \
+           self.state.robot_pos == get_pos(Stations.CHARGE2):
             self.state.battery_level += 10
             self.step()
             self.state.battery_level = min(MAX_BATTERY, self.state.battery_level)
-
             return True
         return False
 
@@ -129,7 +178,7 @@ class Simulation:
         Moves robot towards given position
         """
         if self.state.battery_level > 0:
-            self.path_planner.move_towards(station, self.state)
+            move_towards(station, self.state)
             self.step()
             return True
         return False
@@ -139,7 +188,7 @@ class Simulation:
         Picks up an object if possible
         """
         if self.state.battery_level > 0:
-            if self.state.robot_pos == get_pose(Stations.CONVEYOR_HEAVY) and \
+            if self.state.robot_pos == get_pos(Stations.CONVEYOR_HEAVY) and \
                 self.state.cnv_n_heavy > 0 and \
                 self.state.carried_weight + HEAVY_WEIGHT <= MAX_WEIGHT:
 
@@ -149,7 +198,7 @@ class Simulation:
                 self.state.battery_level -= 1
                 self.step()
                 return True
-            if self.state.robot_pos == get_pose(Stations.CONVEYOR_LIGHT) and \
+            if self.state.robot_pos == get_pos(Stations.CONVEYOR_LIGHT) and \
                 self.state.cnv_n_light > 0 and \
                 self.state.carried_weight + LIGHT_WEIGHT <= MAX_WEIGHT:
 
@@ -166,14 +215,16 @@ class Simulation:
         Places objects if possible
         """
         if self.state.battery_level > 0:
-            if self.state.robot_pos == get_pose(Stations.DELIVERY):
+            if self.state.robot_pos == get_pos(Stations.DELIVERY):
                 for _ in range(self.state.carried_light):
                     self.state.carried_light -= 1
                     self.state.carried_weight -= LIGHT_WEIGHT
+                    self.state.delivered_light += 1
 
                 for _ in range(self.state.carried_heavy):
                     self.state.carried_heavy -= 1
                     self.state.carried_weight -= HEAVY_WEIGHT
+                    self.state.delivered_heavy += 1
                 self.state.battery_level -= 1
                 self.step()
                 return True

@@ -145,7 +145,7 @@ class WorldUI:
         """
 
         self.add_items(world_state.cnv_n_light, world_state.cnv_n_heavy)
-        self.add_robot(world_state.robot_pos)
+        self.add_robot((world_state.robot_pos.x, world_state.robot_pos.y))
 
 
     def save_world(self, name):

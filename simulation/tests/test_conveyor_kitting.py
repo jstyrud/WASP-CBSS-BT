@@ -10,23 +10,23 @@ def test_moveto():
     sim = simulation.Simulation()
     for _ in range(10):
         sim.moveto(simulation.Stations.CHARGE1)
-    assert sim.state.robot_pos == simulation.get_pose(simulation.Stations.CHARGE1)
+    assert sim.state.robot_pos == simulation.get_pos(simulation.Stations.CHARGE1)
 
     for _ in range(10):
         sim.moveto(simulation.Stations.CHARGE2)
-    assert sim.state.robot_pos == simulation.get_pose(simulation.Stations.CHARGE2)
+    assert sim.state.robot_pos == simulation.get_pos(simulation.Stations.CHARGE2)
 
     for _ in range(10):
         sim.moveto(simulation.Stations.CONVEYOR_LIGHT)
-    assert sim.state.robot_pos == simulation.get_pose(simulation.Stations.CONVEYOR_LIGHT)
+    assert sim.state.robot_pos == simulation.get_pos(simulation.Stations.CONVEYOR_LIGHT)
 
     for _ in range(10):
         sim.moveto(simulation.Stations.CONVEYOR_HEAVY)
-    assert sim.state.robot_pos == simulation.get_pose(simulation.Stations.CONVEYOR_HEAVY)
+    assert sim.state.robot_pos == simulation.get_pos(simulation.Stations.CONVEYOR_HEAVY)
 
     for _ in range(10):
         sim.moveto(simulation.Stations.DELIVERY)
-    assert sim.state.robot_pos == simulation.get_pose(simulation.Stations.DELIVERY)
+    assert sim.state.robot_pos == simulation.get_pos(simulation.Stations.DELIVERY)
 
 def test_charge():
     """
@@ -49,13 +49,13 @@ def test_pick():
     for _ in range(10):
         sim.moveto(simulation.Stations.CONVEYOR_LIGHT)
     sim.state.cnv_n_light += 1
-    assert sim.pick() == True
+    assert sim.pick()
     assert sim.state.carried_light == 1
 
     for _ in range(10):
         sim.moveto(simulation.Stations.CONVEYOR_HEAVY)
     sim.state.cnv_n_heavy += 1
-    assert sim.pick() == True
+    assert sim.pick()
     assert sim.state.carried_heavy == 1
 
 def test_place():

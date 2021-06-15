@@ -85,7 +85,7 @@ class PyTree(pt.trees.BehaviourTree):
         #This return is only reached if there are too few up nodes
         return node
 
-    def run_bt(self, max_ticks=30, max_time=30.0):
+    def run_bt(self, max_ticks=100, max_time=10000.0):
         """
         Function executing the behavior tree
         """

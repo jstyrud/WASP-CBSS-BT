@@ -76,13 +76,13 @@ def test_state():
     """
     Test figures printing with state object.
     """
-    state = simulation.WorldState((23, 12), 7, 4)
+    state = simulation.WorldState(simulation.Pos(23, 12), 7, 4)
     world = ui.WorldUI()
     world.add_state(state)
     world.save_world('UI/tests/state')
     plt.close()
 
-    state.robot_pos = (21, 7.5)
+    state.robot_pos = simulation.Pos(21, 7.5)
     state.cnv_n_light = 3
     state.cnv_n_heavy = 4
     world.add_state(state)

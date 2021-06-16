@@ -4,6 +4,7 @@ Interfaces to py_trees from behavior tree strings
 import time
 import py_trees as pt
 import simulation.behavior_tree as behavior_tree
+import UI.draw_world as draw_world
 
 class PyTree(pt.trees.BehaviourTree):
     """
@@ -85,7 +86,7 @@ class PyTree(pt.trees.BehaviourTree):
         #This return is only reached if there are too few up nodes
         return node
 
-    def run_bt(self, max_ticks=100, max_time=10000.0):
+    def run_bt(self, max_ticks=100, max_time=10000.0, show_world=False, tick_period=0.5):
         """
         Function executing the behavior tree
         """
@@ -95,7 +96,12 @@ class PyTree(pt.trees.BehaviourTree):
         successes_required = 2
         successes = 0
         status_ok = True
+        if show_world:
+            world = draw_world.WorldUI()
+            world.reset_world()
+
         start = time.time()
+        last_tick = start
 
         while (self.root.status is not pt.common.Status.FAILURE or straight_fails < max_straight_fails) and \
               (self.root.status is not pt.common.Status.SUCCESS or successes < successes_required) and \
@@ -108,6 +114,10 @@ class PyTree(pt.trees.BehaviourTree):
                     print("Tick", ticks)
                 self.root.tick_once()
                 self.world_interface.send_references()
+
+                if show_world:
+                    world.add_state(self.world_interface.state)
+                    world.print_world()
 
                 ticks += 1
                 if self.root.status is pt.common.Status.SUCCESS:
@@ -124,9 +134,16 @@ class PyTree(pt.trees.BehaviourTree):
                     status_ok = False
                     print("Max time expired")
 
+                while time.time() - last_tick < tick_period:
+                    pass
+                last_tick = time.time()
+
         if self.verbose:
             print("Total episode ticks:", ticks)
             print("Total episode time:", time.time()-start)
+
+        if show_world:
+            world.save_world('testworld')
 
         if ticks >= max_ticks:
             self.timeout = True

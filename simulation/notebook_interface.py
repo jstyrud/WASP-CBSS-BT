@@ -15,13 +15,13 @@ class Environment():
         self.verbose = verbose
         self.fitness_coeff = fitness_coeff
 
-    def get_fitness(self, individual):
+    def get_fitness(self, individual, show_world=False, tick_period=0.5):
         """ Run the simulation and return the fitness """
         world_interface = sm.Simulation(seed=self.seed)
         pytree = PyTree(individual[:], behaviors=behaviors, world_interface=world_interface, verbose=self.verbose)
 
         # run the Behavior Tree
-        ticks, _ = pytree.run_bt()
+        ticks, _ = pytree.run_bt(show_world=show_world, tick_period=tick_period)
 
         return fitness_function.compute_fitness(world_interface, pytree, ticks, self.fitness_coeff)
 

@@ -104,6 +104,8 @@ class PyTree(pt.trees.BehaviourTree):
             status_ok = self.world_interface.get_feedback() #Wait for connection
 
             if status_ok:
+                if self.verbose:
+                    print("Tick", ticks)
                 self.root.tick_once()
                 self.world_interface.send_references()
 
@@ -122,7 +124,10 @@ class PyTree(pt.trees.BehaviourTree):
                     status_ok = False
                     print("Max time expired")
 
-        print(ticks, time.time()-start)
+        if self.verbose:
+            print("Total episode ticks:", ticks)
+            print("Total episode time:", time.time()-start)
+
         if ticks >= max_ticks:
             self.timeout = True
         if straight_fails >= max_straight_fails:

@@ -100,7 +100,7 @@ def load_settings_from_file(file):
     ALL_NODES = []
 
     with open(file) as f:
-        bt_settings = yaml.load(f, Loader=yaml.FullLoader)
+        bt_settings = yaml.load(f, Loader=yaml.Loader)
     try:
         FALLBACK_NODES = bt_settings["fallback_nodes"]
         if FALLBACK_NODES is None:

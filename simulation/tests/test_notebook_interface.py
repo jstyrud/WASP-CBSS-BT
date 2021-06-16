@@ -31,7 +31,7 @@ def test_charge_and_light():
 
     notebook_interface.plot_individual('', 'test', individual)
 
-    assert environment.get_fitness(individual, tick_period=0.0) > 0.0
+    assert environment.get_fitness(individual, show_world=False, tick_period=0.0) > 0.0
 
 def test_charge_and_heavy():
     """
@@ -46,4 +46,4 @@ def test_charge_and_heavy():
 
     notebook_interface.plot_individual('', 'test', individual)
 
-    assert environment.get_fitness(individual, tick_period=0.0) > 0.0
+    assert environment.get_fitness(individual, show_world=False, tick_period=0.0) > 0.0

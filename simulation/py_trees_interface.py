@@ -117,7 +117,7 @@ class PyTree(pt.trees.BehaviourTree):
 
                 if show_world:
                     world.add_state(self.world_interface.state)
-                    world.print_world()
+                    world.plot_world()
 
                 ticks += 1
                 if self.root.status is pt.common.Status.SUCCESS:
@@ -143,6 +143,7 @@ class PyTree(pt.trees.BehaviourTree):
             print("Total episode time:", time.time()-start)
 
         if show_world:
+            world.animate()
             world.save_world('testworld')
 
         if ticks >= max_ticks:

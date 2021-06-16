@@ -7,6 +7,7 @@ import math
 import matplotlib.pyplot as plt
 import matplotlib.lines as lines
 from matplotlib.patches import RegularPolygon, Rectangle
+from celluloid import Camera
 
 class Object:
     """ Class for graphical objects parameters """
@@ -33,8 +34,8 @@ class WorldUI:
         """
         Initialize the static objects in the world.
         """
-        self.figure = None
-        self.axes = None
+        self.figure, self.axes = plt.subplots()
+        self.camera = Camera(self.figure)
 
         # initialize Map object
         self.map = Object(x=0, y=0, l=25, h=15, line='black', fill='white')
@@ -50,20 +51,10 @@ class WorldUI:
         self.itemL = Object(x=0, y=0, l=0.5, h=0.5, line='red', fill='red')
         self.itemH = Object(x=0, y=0, l=0.5, h=1, line='blue', fill='blue')
 
-
-    def get_figure(self):
-        """
-        Return the figure object
-        """
-        return self.figure, self.axes
-
-
     def reset_world(self):
         """
         Reset the world with static objects and robot in home position.
         """
-        self.figure, self.axes = plt.subplots()
-
         # add the Map
         self.axes.add_patch(Rectangle(self.map.origin, self.map.length, self.map.height, \
             edgecolor=self.map.line, facecolor=self.map.fill))
@@ -157,8 +148,15 @@ class WorldUI:
         self.figure.savefig(path)
         plt.close(self.figure)
 
-    def print_world(self):
+    def plot_world(self):
         """
-        Plot the world with added patches to file.
+        Plot the world
         """
         self.axes.plot()
+        #img_obj = plt.imread('test.png')
+        #self.axes[1].imshow(img_obj)
+        self.camera.snap()
+
+    def animate(self):
+        animation = self.camera.animate()
+        animation.save('animation.gif', writer='imagemagick')

@@ -12,11 +12,11 @@ def test_idle():
     """
     environment = notebook_interface.Environment()
 
-    assert environment.get_fitness(['idle'], tick_period=0.0) == -0.1
+    assert environment.get_fitness(['idle']) == -0.1
 
-    assert environment.get_fitness(['s(', 'idle', 'idle', ')'], tick_period=0.0) == -0.3
+    assert environment.get_fitness(['s(', 'idle', 'idle', ')']) == -0.3
 
-    assert environment.get_fitness(['f(', 'idle', 'idle', ')'], tick_period=0.0) == -0.3
+    assert environment.get_fitness(['f(', 'idle', 'idle', ')']) == -0.3
 
 def test_charge_and_light():
     """
@@ -31,7 +31,7 @@ def test_charge_and_light():
 
     notebook_interface.plot_individual('', 'test', individual)
 
-    assert environment.get_fitness(individual, show_world=False, tick_period=0.0) > 0.0
+    assert environment.get_fitness(individual, show_world=False) > 0.0
 
 def test_charge_and_heavy():
     """
@@ -46,4 +46,4 @@ def test_charge_and_heavy():
 
     notebook_interface.plot_individual('', 'test', individual)
 
-    assert environment.get_fitness(individual, show_world=False, tick_period=0.0) > 0.0
+    assert environment.get_fitness(individual, show_world=False) > 0.0

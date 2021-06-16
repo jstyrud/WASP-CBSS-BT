@@ -86,7 +86,7 @@ class PyTree(pt.trees.BehaviourTree):
         #This return is only reached if there are too few up nodes
         return node
 
-    def run_bt(self, max_ticks=100, max_time=10000.0, show_world=False, tick_period=0.5):
+    def run_bt(self, max_ticks=100, max_time=10000.0, show_world=False):
         """
         Function executing the behavior tree
         """
@@ -101,7 +101,6 @@ class PyTree(pt.trees.BehaviourTree):
             world.reset_world()
 
         start = time.time()
-        last_tick = start
 
         while (self.root.status is not pt.common.Status.FAILURE or straight_fails < max_straight_fails) and \
               (self.root.status is not pt.common.Status.SUCCESS or successes < successes_required) and \
@@ -133,10 +132,6 @@ class PyTree(pt.trees.BehaviourTree):
                 if time.time() - start > max_time:
                     status_ok = False
                     print("Max time expired")
-
-                while time.time() - last_tick < tick_period:
-                    pass
-                last_tick = time.time()
 
         if self.verbose:
             print("Total episode ticks:", ticks)

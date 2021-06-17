@@ -47,3 +47,23 @@ def test_charge_and_heavy():
     notebook_interface.plot_individual('', 'test', individual)
 
     assert environment.get_fitness(individual, show_world=False) > 0.0
+
+def test_step():
+    """
+    Test stepping instead of running
+    """
+    environment = notebook_interface.Environment(verbose=True)
+
+    individual = ['s(', 'f(', 's(', 'battery level < 90', 'at station CHARGE1', 'charge', ')', \
+                              'battery level > 50', 's(', 'move to CHARGE1', 'charge', ')', ')', \
+                        'f(', 'carried weight > 0', 's(', 'move to CONVEYOR_HEAVY', 'f(', 'pick', 'idle', ')', ')', ')', \
+                        'move to DELIVERY', 'place', ')']
+
+    environment.get_fitness(individual, max_ticks=100, show_world=False)
+    state = environment.world_interface.state
+
+    environment = notebook_interface.Environment(verbose=True)
+    for _ in range(100):
+        environment.step(individual)
+
+    assert state == environment.world_interface.state

@@ -147,6 +147,27 @@ class PyTree(pt.trees.BehaviourTree):
             self.failed = True
         return ticks, status_ok
 
+    def step_bt(self, show_world=False):
+        """
+        Steps the BT one step
+        """
+        status_ok = True
+        if show_world:
+            world = draw_world.WorldUI()
+            world.reset_world()
+
+        status_ok = self.world_interface.get_feedback() #Wait for connection
+
+        if status_ok:
+            self.root.tick_once()
+            self.world_interface.send_references()
+
+            if show_world:
+                world.add_state(self.world_interface.state)
+                world.plot_world()
+
+        return status_ok
+
     def save_fig(self, path, name='Behavior tree'):
         """
         Saves the tree as a figure

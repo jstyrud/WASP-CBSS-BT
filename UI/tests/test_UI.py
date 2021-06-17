@@ -92,6 +92,26 @@ def test_state():
     world.save_world('UI/tests/new_state')
     plt.close()
 
+def test_table():
+    """
+    Test the table with world state information
+    """
+    state = simulation.WorldState()
+    state.robot_pos = simulation.Pos(23, 12)
+    state.cnv_n_light = 3
+    state.cnv_n_heavy = 4
+    state.battery_level = 100
+    state.carried_heavy = 10
+    state.carried_light = 20
+    state.carried_weight = 30
+    state.delivered_heavy = 51
+    state.delivered_light = 52
+    world = ui.WorldUI()
+    world.reset_world()
+    world.add_state(state)
+    world.state_table(state)
+    world.save_world('UI/tests/table')
+
 def test_plot():
     """
     Test if a figure can be output.

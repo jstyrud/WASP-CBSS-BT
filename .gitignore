@@ -144,6 +144,7 @@ Showcase
 *.png
 *.svg
 *.pdf
+*.gif
 *.coverage
 *.pyperf
 *.mp4

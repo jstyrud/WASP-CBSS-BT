@@ -76,7 +76,10 @@ def test_state():
     """
     Test figures printing with state object.
     """
-    state = simulation.WorldState(simulation.Pos(23, 12), 7, 4)
+    state = simulation.WorldState()
+    state.robot_pos = simulation.Pos(23, 12)
+    state.cnv_n_light = 7
+    state.cnv_n_heavy = 4
     world = ui.WorldUI()
     world.add_state(state)
     world.save_world('UI/tests/state')
@@ -89,20 +92,30 @@ def test_state():
     world.save_world('UI/tests/new_state')
     plt.close()
 
-def test_print():
+def test_plot():
     """
     Test if a figure can be output.
     """
     world = ui.WorldUI()
     world.reset_world()
-    world.print_world()
+    world.plot_world()
 
-def test_get():
+def test_animate():
     """
-    Test if a figure can be returned with the get method.
+    Test animating world progression
     """
+    state = simulation.WorldState()
+    state.robot_pos = simulation.Pos(23, 12)
+    state.cnv_n_light = 3
+    state.cnv_n_heavy = 4
     world = ui.WorldUI()
     world.reset_world()
-    _, ax = world.get_figure()
-    ax.plot()
-    plt.show(block=False)
+    world.add_state(state)
+    world.plot_world()
+
+    state.robot_pos = simulation.Pos(21, 7.5)
+    state.cnv_n_light = 1
+    state.cnv_n_heavy = 1
+    world.add_state(state)
+    world.plot_world()
+    world.animate()

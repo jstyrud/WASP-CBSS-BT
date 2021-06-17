@@ -24,7 +24,7 @@ class WorldState:
     """
     The complete world state:
     """
-    robot_pos: Pos = Pos(0, 0)
+    robot_pos: Pos = Pos(12.0, 7.0)
     battery_level: int = MAX_BATTERY
     carried_weight: int = 0
     carried_light: int = 0

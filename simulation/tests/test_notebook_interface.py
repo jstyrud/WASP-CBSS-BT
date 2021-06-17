@@ -59,7 +59,7 @@ def test_step():
                         'f(', 'carried weight > 0', 's(', 'move to CONVEYOR_HEAVY', 'f(', 'pick', 'idle', ')', ')', ')', \
                         'move to DELIVERY', 'place', ')']
 
-    environment.get_fitness(individual, show_world=False)
+    environment.get_fitness(individual, max_ticks=100, show_world=False)
     state = environment.world_interface.state
 
     environment = notebook_interface.Environment(verbose=True)

@@ -3,6 +3,7 @@ Simulation of a robot performing kitting from two conveyors
 """
 import random
 from dataclasses import dataclass
+from dataclasses import field
 from enum import IntEnum
 
 MAX_BATTERY = 100
@@ -16,15 +17,15 @@ class Pos:
     """
     Position
     """
-    x: float = 0
-    y: float = 0
+    x: float = 12.0
+    y: float = 7.0
 
 @dataclass
 class WorldState:
     """
     The complete world state:
     """
-    robot_pos: Pos = Pos(12.0, 7.0)
+    robot_pos: Pos = field(default_factory=Pos)
     battery_level: int = MAX_BATTERY
     carried_weight: int = 0
     carried_light: int = 0

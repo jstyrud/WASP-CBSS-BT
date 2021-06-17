@@ -17,14 +17,14 @@ class Environment():
         self.world_interface = None
         self.pytree = None
 
-    def get_fitness(self, individual, show_world=False):
+    def get_fitness(self, individual, max_ticks=100, show_world=False):
         """ Run the simulation and return the fitness """
         self.world_interface = sm.Simulation(seed=self.seed)
         self.pytree = PyTree(individual[:], behaviors=behaviors, \
             world_interface=self.world_interface, verbose=self.verbose)
 
         # run the Behavior Tree
-        ticks, _ = self.pytree.run_bt(show_world=show_world)
+        ticks, _ = self.pytree.run_bt(max_ticks=max_ticks, show_world=show_world)
 
         return fitness_function.compute_fitness(self.world_interface, self.pytree, ticks, self.fitness_coeff)
 

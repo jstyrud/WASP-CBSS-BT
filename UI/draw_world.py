@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as lines
 from matplotlib.patches import RegularPolygon, Rectangle
 from celluloid import Camera
-from copy import copy
 
 class Object:
     """ Class for graphical objects parameters """
@@ -88,7 +87,6 @@ class WorldUI:
         self.table_ax.get_yaxis().set_visible(False)
         # Hide axes border
         self.table_ax.axis('off')
-        plt.draw()
 
         return the_table
 
@@ -202,7 +200,6 @@ class WorldUI:
             self.table.get_celld()[(7, 0)].get_text().set_text('0')
             self.table.get_celld()[(8, 0)].get_text().set_text('0')
 
-        plt.draw()
 
     def add_state(self, world_state):
         """

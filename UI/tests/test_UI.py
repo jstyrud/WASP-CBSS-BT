@@ -120,7 +120,7 @@ def test_plot():
 
 def test_animate():
     """
-    Test animating world progression
+    Test animating world progression.
     """
     state = simulation.WorldState()
     state.robot_pos = simulation.Pos(23, 12)

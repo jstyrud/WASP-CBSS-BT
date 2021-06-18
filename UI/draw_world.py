@@ -35,7 +35,7 @@ class WorldUI:
         """
         Initialize the static objects in the world.
         """
-        self.figure, self.axes = plt.subplots(nrows=1, ncols=2)
+        self.figure, self.axes = plt.subplots(nrows=1, ncols=2, figsize=(12,6), gridspec_kw={'width_ratios': [3, 1]})
         self.map_ax = self.axes[0]
         self.table_ax = self.axes[1]
         self.camera = Camera(self.figure)
@@ -155,14 +155,15 @@ class WorldUI:
         plt.close(self.figure)
 
 
-    def state_table(self, world_state):
+    def add_table(self, world_state):
         """
         Plot a table summing up the world state.
         """
         
         headers = ['robot pose', 'battery lv', 'carried weight', 'carried light', 'carried heavy', \
             'heavy in conveyor', 'light in conveyor', 'delivered heavy', 'delivered light']
-        values = [world_state.robot_pos, world_state.battery_level, world_state.carried_weight, \
+        robot_pos = (world_state.robot_pos.x, world_state.robot_pos.x)
+        values = [robot_pos, world_state.battery_level, world_state.carried_weight, \
             world_state.carried_light, world_state.carried_heavy, world_state.cnv_n_light, \
             world_state.cnv_n_heavy, world_state.delivered_heavy, world_state.delivered_light]
 
@@ -177,11 +178,11 @@ class WorldUI:
                             rowColours=rcolors,
                             rowLoc='right',
                             cellLoc='left',
-                            loc='right',
+                            loc='center',
                             colWidths=[0.3 for x in cell_text])
         the_table.scale(1, 1.5)
         the_table.auto_set_font_size(False)
-        the_table.set_fontsize(10)
+        the_table.set_fontsize(9)
         self.table_ax.add_table(the_table)
         # Hide axes
         self.table_ax.get_xaxis().set_visible(False)
@@ -205,4 +206,4 @@ class WorldUI:
         Print a gif with the animation of the simulation
         """
         animation = self.camera.animate()
-        animation.save('animation.gif', writer='imagemagick')
+        animation.save('UI/tests/animation.gif', writer='imagemagick')

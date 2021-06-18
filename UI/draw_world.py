@@ -35,7 +35,7 @@ class WorldUI:
         """
         Initialize the static objects in the world.
         """
-        self.figure, self.axes = plt.subplots(nrows=1, ncols=2, figsize=(12,6), gridspec_kw={'width_ratios': [3, 1]})
+        self.figure, self.axes = plt.subplots(nrows=1, ncols=2, figsize=(12, 6), gridspec_kw={'width_ratios': [3, 1]})
         self.map_ax = self.axes[0]
         self.table_ax = self.axes[1]
         self.camera = Camera(self.figure)
@@ -159,7 +159,6 @@ class WorldUI:
         """
         Plot a table summing up the world state.
         """
-        
         headers = ['robot pose', 'battery lv', 'carried weight', 'carried light', 'carried heavy', \
             'heavy in conveyor', 'light in conveyor', 'delivered heavy', 'delivered light']
         robot_pos = (world_state.robot_pos.x, world_state.robot_pos.x)
@@ -174,12 +173,12 @@ class WorldUI:
         rcolors = plt.cm.BuPu(np.full(len(headers), 0.1))
         #Add a table at the bottom of the axes
         the_table = plt.table(cellText=cell_text,
-                            rowLabels=headers,
-                            rowColours=rcolors,
-                            rowLoc='right',
-                            cellLoc='left',
-                            loc='center',
-                            colWidths=[0.3 for x in cell_text])
+                              rowLabels=headers,
+                              rowColours=rcolors,
+                              rowLoc='right',
+                              cellLoc='left',
+                              loc='center',
+                              colWidths=[0.3 for x in cell_text])
         the_table.scale(1, 1.5)
         the_table.auto_set_font_size(False)
         the_table.set_fontsize(9)

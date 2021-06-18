@@ -137,6 +137,7 @@ env
 logs
 duplo
 Showcase
+gp
 *.sqlite
 *.sln
 *.pyproj

@@ -4,6 +4,7 @@ Class to print the state of the world
 """
 
 import math
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.lines as lines
 from matplotlib.patches import RegularPolygon, Rectangle
@@ -34,8 +35,14 @@ class WorldUI:
         """
         Initialize the static objects in the world.
         """
-        self.figure, self.axes = plt.subplots()
+        self.figure, self.axes = plt.subplots(nrows=1, ncols=2, figsize=(12,6), gridspec_kw={'width_ratios': [3, 1]})
+        self.map_ax = self.axes[0]
+        self.table_ax = self.axes[1]
         self.camera = Camera(self.figure)
+
+        title_text = 'World State'
+        # Add title
+        plt.suptitle(title_text)
 
         # initialize Map object
         self.map = Object(x=0, y=0, l=25, h=15, line='black', fill='white')
@@ -56,7 +63,7 @@ class WorldUI:
         Reset the world with static objects and robot in home position.
         """
         # add the Map
-        self.axes.add_patch(Rectangle(self.map.origin, self.map.length, self.map.height, \
+        self.map_ax.add_patch(Rectangle(self.map.origin, self.map.length, self.map.height, \
             edgecolor=self.map.line, facecolor=self.map.fill))
 
         # add the Conveyors:
@@ -87,9 +94,9 @@ class WorldUI:
         self.axes.text(self.conv_h.origin[0]+0.5, self.conv_h.origin[1]+self.conv_h.height+1, 'Conveyor HEAVY')
 
         # add the Delivery area
-        self.axes.add_patch(Rectangle(self.delivery.origin, self.delivery.length, self.delivery.height,  \
+        self.map_ax.add_patch(Rectangle(self.delivery.origin, self.delivery.length, self.delivery.height,  \
             edgecolor=self.delivery.line, facecolor=self.delivery.fill))
-        self.axes.text(self.delivery.origin[0]-0.5, self.delivery.origin[1]-1, 'Delivery')
+        self.map_ax.text(self.delivery.origin[0]-0.5, self.delivery.origin[1]-1, 'Delivery')
 
         # add the Chargin stations
         self.axes.add_patch(Rectangle(self.charge_c.origin, self.charge_c.length, self.charge_c.height, \
@@ -103,9 +110,9 @@ class WorldUI:
         """
         Add the robot in the UI.
         """
-        self.axes.add_patch(RegularPolygon(pose, 8, radius=1, orientation=math.pi/8, \
+        self.map_ax.add_patch(RegularPolygon(pose, 8, radius=1, orientation=math.pi/8, \
             edgecolor='black', facecolor='paleturquoise'))
-        self.axes.text(pose[0]-0.4, pose[1]-0.2, 'R', fontweight='bold')
+        self.map_ax.text(pose[0]-0.4, pose[1]-0.2, 'R', fontweight='bold')
 
 
     def add_items(self, n_light, n_heavy):
@@ -134,7 +141,6 @@ class WorldUI:
         It assumes that the world state has a field Robot with its pose.
         It assumes that the world state has fields Nr. of Heavy/Light objects in the conveyors.
         """
-
         self.add_items(world_state.cnv_n_light, world_state.cnv_n_heavy)
         self.add_robot((world_state.robot_pos.x, world_state.robot_pos.y))
 
@@ -143,23 +149,61 @@ class WorldUI:
         """
         Save the world with added patches to file.
         """
-        self.axes.plot()
+        self.map_ax.plot()
         path = name + '.svg'
         self.figure.savefig(path)
         plt.close(self.figure)
+
+
+    def add_table(self, world_state):
+        """
+        Plot a table summing up the world state.
+        """
+        
+        headers = ['robot pose', 'battery lv', 'carried weight', 'carried light', 'carried heavy', \
+            'heavy in conveyor', 'light in conveyor', 'delivered heavy', 'delivered light']
+        robot_pos = (world_state.robot_pos.x, world_state.robot_pos.x)
+        values = [robot_pos, world_state.battery_level, world_state.carried_weight, \
+            world_state.carried_light, world_state.carried_heavy, world_state.cnv_n_light, \
+            world_state.cnv_n_heavy, world_state.delivered_heavy, world_state.delivered_light]
+
+        cell_text = []
+        for val in values:
+            cell_text.append([str(val)])
+
+        rcolors = plt.cm.BuPu(np.full(len(headers), 0.1))
+        #Add a table at the bottom of the axes
+        the_table = plt.table(cellText=cell_text,
+                            rowLabels=headers,
+                            rowColours=rcolors,
+                            rowLoc='right',
+                            cellLoc='left',
+                            loc='center',
+                            colWidths=[0.3 for x in cell_text])
+        the_table.scale(1, 1.5)
+        the_table.auto_set_font_size(False)
+        the_table.set_fontsize(9)
+        self.table_ax.add_table(the_table)
+        # Hide axes
+        self.table_ax.get_xaxis().set_visible(False)
+        self.table_ax.get_yaxis().set_visible(False)
+        # Hide axes border
+        plt.box(on=None)
+        plt.draw()
+
 
     def plot_world(self):
         """
         Plot the world
         """
-        self.axes.plot()
-        #img_obj = plt.imread('test.png')
-        #self.axes[1].imshow(img_obj)
+        self.map_ax.plot()
+        self.table_ax.plot()
         self.camera.snap()
+
 
     def animate(self):
         """
         Save an animated gif of the world, one frame per tick
         """
         animation = self.camera.animate()
-        animation.save('animation.gif', writer='imagemagick')
+        animation.save('UI/tests/animation.gif', writer='imagemagick')

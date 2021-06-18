@@ -74,27 +74,27 @@ class WorldUI:
         # - black entry point
         # - black band lines
         # - label
-        self.axes.add_patch(Rectangle(self.conv_l.origin, self.conv_l.length, self.conv_l.height, \
+        self.map_ax.add_patch(Rectangle(self.conv_l.origin, self.conv_l.length, self.conv_l.height, \
                                       edgecolor=self.conv_l.line, facecolor=self.conv_l.fill))
-        self.axes.add_patch(Rectangle((self.conv_l.origin[0]-1, self.conv_l.origin[1]-1), 1, 4, \
+        self.map_ax.add_patch(Rectangle((self.conv_l.origin[0]-1, self.conv_l.origin[1]-1), 1, 4, \
             edgecolor='black', facecolor='black'))
         for i in range(self.conv_l.length):
             x_points = [self.conv_l.origin[0]+i, self.conv_l.origin[0]+i]
             y_points = [self.conv_l.origin[1], self.conv_l.origin[1]+self.conv_l.height]
-            line = lines.Line2D(x_points, y_points, color='black', axes=self.axes)
-            self.axes.add_line(line)
-        self.axes.text(self.conv_l.origin[0]+0.5, self.conv_l.origin[1]-1.5, 'Conveyor LIGHT')
+            line = lines.Line2D(x_points, y_points, color='black', axes=self.map_ax)
+            self.map_ax.add_line(line)
+        self.map_ax.text(self.conv_l.origin[0]+0.5, self.conv_l.origin[1]-1.5, 'Conveyor LIGHT')
 
-        self.axes.add_patch(Rectangle(self.conv_h.origin, self.conv_h.length, self.conv_h.height,  \
+        self.map_ax.add_patch(Rectangle(self.conv_h.origin, self.conv_h.length, self.conv_h.height,  \
                                       edgecolor=self.conv_h.line, facecolor=self.conv_h.fill))
-        self.axes.add_patch(Rectangle((self.conv_h.origin[0]-1, self.conv_h.origin[1]-1), 1, 4, \
+        self.map_ax.add_patch(Rectangle((self.conv_h.origin[0]-1, self.conv_h.origin[1]-1), 1, 4, \
             edgecolor='black', facecolor='black'))
         for i in range(self.conv_h.length):
             x_points = [self.conv_h.origin[0]+i, self.conv_h.origin[0]+i]
             y_points = [self.conv_h.origin[1], self.conv_h.origin[1]+self.conv_h.height]
-            line = lines.Line2D(x_points, y_points, color='black', axes=self.axes)
-            self.axes.add_line(line)
-        self.axes.text(self.conv_h.origin[0]+0.5, self.conv_h.origin[1]+self.conv_h.height+1, 'Conveyor HEAVY')
+            line = lines.Line2D(x_points, y_points, color='black', axes=self.map_ax)
+            self.map_ax.add_line(line)
+        self.map_ax.text(self.conv_h.origin[0]+0.5, self.conv_h.origin[1]+self.conv_h.height+1, 'Conveyor HEAVY')
 
         # add the Delivery area
         self.map_ax.add_patch(Rectangle(self.delivery.origin, self.delivery.length, self.delivery.height,  \
@@ -102,15 +102,15 @@ class WorldUI:
         self.map_ax.text(self.delivery.origin[0]-0.5, self.delivery.origin[1]-1, 'Delivery')
 
         # add the Chargin stations
-        self.axes.add_patch(Rectangle(self.charge_c.origin, self.charge_c.length, self.charge_c.height, \
+        self.map_ax.add_patch(Rectangle(self.charge_c.origin, self.charge_c.length, self.charge_c.height, \
             edgecolor=self.charge_c.line, facecolor=self.charge_c.fill))
-        self.axes.text(self.charge_c.origin[0]-0.5, self.charge_c.origin[1]-1, 'Charge 1')
-        self.axes.add_patch(Rectangle(self.charge_d.origin, self.charge_d.length, self.charge_d.height, \
+        self.map_ax.text(self.charge_c.origin[0]-0.5, self.charge_c.origin[1]-1, 'Charge 1')
+        self.map_ax.add_patch(Rectangle(self.charge_d.origin, self.charge_d.length, self.charge_d.height, \
             edgecolor=self.charge_d.line, facecolor=self.charge_d.fill))
-        self.axes.text(self.charge_d.origin[0]-2, self.charge_d.origin[1]+2.5, 'Charge 2')
+        self.map_ax.text(self.charge_d.origin[0]-2, self.charge_d.origin[1]+2.5, 'Charge 2')
 
         # reset the table
-        self.add_table(world_state=None)
+        self.print_table(world_state=None)
 
 
     def add_robot(self, pose):
@@ -131,18 +131,18 @@ class WorldUI:
 
         for i in range(n_light):
             self.item_l.set_origin(origin_lx - i, origin_ly)
-            self.axes.add_patch(Rectangle(self.item_l.origin, self.item_l.length, self.item_l.height, \
+            self.map_ax.add_patch(Rectangle(self.item_l.origin, self.item_l.length, self.item_l.height, \
                 edgecolor=self.item_l.line, facecolor=self.item_l.fill))
 
         origin_hx = self.conv_h.origin[0] + self.conv_h.length - self.item_h.length*1.5
         origin_hy = self.conv_h.origin[1] + 0.5*(self.conv_h.height - self.item_h.height)
         for i in range(n_heavy):
             self.item_h.set_origin(origin_hx - i, origin_hy)
-            self.axes.add_patch(Rectangle(self.item_h.origin, self.item_h.length, self.item_h.height, \
+            self.map_ax.add_patch(Rectangle(self.item_h.origin, self.item_h.length, self.item_h.height, \
                 edgecolor=self.item_h.line, facecolor=self.item_h.fill))
 
 
-    def add_table(self, world_state=None, animated=False):
+    def print_table(self, world_state=None, animated=False):
         """
         Plot a table summing up the world state.
         If no object world state is given, the table gets resetted.
@@ -191,7 +191,7 @@ class WorldUI:
         self.reset_world()
         self.add_items(world_state.cnv_n_light, world_state.cnv_n_heavy)
         self.add_robot((world_state.robot_pos.x, world_state.robot_pos.y))
-        self.add_table(world_state, animated=animated)
+        self.print_table(world_state, animated=animated)
 
 
     def save_world(self, name):

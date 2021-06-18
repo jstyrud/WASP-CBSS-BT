@@ -175,7 +175,7 @@ class WorldUI:
                 edgecolor=self.item_h.line, facecolor=self.item_h.fill))
 
 
-    def update_table(self, world_state=None, animated=False):
+    def update_table(self, world_state=None):
         """
         Plot a table summing up the world state.
         If no object world state is given, the table gets resetted.
@@ -204,7 +204,7 @@ class WorldUI:
 
         plt.draw()
 
-    def add_state(self, world_state, animated=False):
+    def add_state(self, world_state):
         """
         Add the world state in the UI.
         It assumes that the world state has a field Robot with its pose.
@@ -213,7 +213,7 @@ class WorldUI:
         self.reset_world()
         self.add_items(world_state.cnv_n_light, world_state.cnv_n_heavy)
         self.add_robot((world_state.robot_pos.x, world_state.robot_pos.y))
-        self.update_table(world_state, animated=animated)
+        self.update_table(world_state)
 
 
     def save_world(self, name):

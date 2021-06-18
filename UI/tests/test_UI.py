@@ -127,12 +127,12 @@ def test_animate():
     state.cnv_n_light = 3
     state.cnv_n_heavy = 4
     world = ui.WorldUI()
-    world.add_state(state, animated=True)
+    world.add_state(state)
     world.plot_world()
 
     state.robot_pos = simulation.Pos(21, 7.5)
     state.cnv_n_light = 1
     state.cnv_n_heavy = 1
-    world.add_state(state, animated=True)
+    world.add_state(state)
     world.plot_world()
     world.animate()

@@ -59,12 +59,45 @@ class WorldUI:
         self.item_l = Object(x=0, y=0, l=0.5, h=0.5, line='red', fill='red')
         self.item_h = Object(x=0, y=0, l=0.5, h=1, line='blue', fill='blue')
 
+        self.table = self.create_table()
+
+
+    def create_table(self):
+        """
+        Create the table object in the figure
+        """
+        headers = ['robot pose', 'battery lv', 'carried weight', 'carried light', 'carried heavy', \
+            'heavy in conveyor', 'light in conveyor', 'delivered heavy', 'delivered light']
+        cell_text = [[('?','?')], ['?'], ['0'], ['0'], ['0'], ['0'], ['0'], ['0'], ['0']]
+
+        rcolors = plt.cm.BuPu(np.full(len(headers), 0.1))
+        #Add a table at the bottom of the axes
+        the_table = plt.table(cellText=cell_text,
+                              rowLabels=headers,
+                              rowColours=rcolors,
+                              rowLoc='right',
+                              cellLoc='left',
+                              loc='center',
+                              colWidths=[0.3 for x in cell_text])
+        the_table.scale(1, 1.5)
+        the_table.auto_set_font_size(False)
+        the_table.set_fontsize(9)
+        self.table_ax.add_table(the_table)
+        # Hide axes
+        self.table_ax.get_xaxis().set_visible(False)
+        self.table_ax.get_yaxis().set_visible(False)
+        # Hide axes border
+        self.table_ax.axis('off')
+        plt.draw()
+
+        return the_table
+
+
     def reset_world(self):
         """
         Reset the world with static objects and robot in home position.
         """
         self.map_ax.clear()
-        self.table_ax.clear()
         # add the Map
         self.map_ax.add_patch(Rectangle(self.map.origin, self.map.length, self.map.height, \
             edgecolor=self.map.line, facecolor=self.map.fill))
@@ -74,27 +107,27 @@ class WorldUI:
         # - black entry point
         # - black band lines
         # - label
-        self.axes.add_patch(Rectangle(self.conv_l.origin, self.conv_l.length, self.conv_l.height, \
+        self.map_ax.add_patch(Rectangle(self.conv_l.origin, self.conv_l.length, self.conv_l.height, \
                                       edgecolor=self.conv_l.line, facecolor=self.conv_l.fill))
-        self.axes.add_patch(Rectangle((self.conv_l.origin[0]-1, self.conv_l.origin[1]-1), 1, 4, \
+        self.map_ax.add_patch(Rectangle((self.conv_l.origin[0]-1, self.conv_l.origin[1]-1), 1, 4, \
             edgecolor='black', facecolor='black'))
         for i in range(self.conv_l.length):
             x_points = [self.conv_l.origin[0]+i, self.conv_l.origin[0]+i]
             y_points = [self.conv_l.origin[1], self.conv_l.origin[1]+self.conv_l.height]
-            line = lines.Line2D(x_points, y_points, color='black', axes=self.axes)
-            self.axes.add_line(line)
-        self.axes.text(self.conv_l.origin[0]+0.5, self.conv_l.origin[1]-1.5, 'Conveyor LIGHT')
+            line = lines.Line2D(x_points, y_points, color='black', axes=self.map_ax)
+            self.map_ax.add_line(line)
+        self.map_ax.text(self.conv_l.origin[0]+0.5, self.conv_l.origin[1]-1.5, 'Conveyor LIGHT')
 
-        self.axes.add_patch(Rectangle(self.conv_h.origin, self.conv_h.length, self.conv_h.height,  \
+        self.map_ax.add_patch(Rectangle(self.conv_h.origin, self.conv_h.length, self.conv_h.height,  \
                                       edgecolor=self.conv_h.line, facecolor=self.conv_h.fill))
-        self.axes.add_patch(Rectangle((self.conv_h.origin[0]-1, self.conv_h.origin[1]-1), 1, 4, \
+        self.map_ax.add_patch(Rectangle((self.conv_h.origin[0]-1, self.conv_h.origin[1]-1), 1, 4, \
             edgecolor='black', facecolor='black'))
         for i in range(self.conv_h.length):
             x_points = [self.conv_h.origin[0]+i, self.conv_h.origin[0]+i]
             y_points = [self.conv_h.origin[1], self.conv_h.origin[1]+self.conv_h.height]
-            line = lines.Line2D(x_points, y_points, color='black', axes=self.axes)
-            self.axes.add_line(line)
-        self.axes.text(self.conv_h.origin[0]+0.5, self.conv_h.origin[1]+self.conv_h.height+1, 'Conveyor HEAVY')
+            line = lines.Line2D(x_points, y_points, color='black', axes=self.map_ax)
+            self.map_ax.add_line(line)
+        self.map_ax.text(self.conv_h.origin[0]+0.5, self.conv_h.origin[1]+self.conv_h.height+1, 'Conveyor HEAVY')
 
         # add the Delivery area
         self.map_ax.add_patch(Rectangle(self.delivery.origin, self.delivery.length, self.delivery.height,  \
@@ -102,15 +135,15 @@ class WorldUI:
         self.map_ax.text(self.delivery.origin[0]-0.5, self.delivery.origin[1]-1, 'Delivery')
 
         # add the Chargin stations
-        self.axes.add_patch(Rectangle(self.charge_c.origin, self.charge_c.length, self.charge_c.height, \
+        self.map_ax.add_patch(Rectangle(self.charge_c.origin, self.charge_c.length, self.charge_c.height, \
             edgecolor=self.charge_c.line, facecolor=self.charge_c.fill))
-        self.axes.text(self.charge_c.origin[0]-0.5, self.charge_c.origin[1]-1, 'Charge 1')
-        self.axes.add_patch(Rectangle(self.charge_d.origin, self.charge_d.length, self.charge_d.height, \
+        self.map_ax.text(self.charge_c.origin[0]-0.5, self.charge_c.origin[1]-1, 'Charge 1')
+        self.map_ax.add_patch(Rectangle(self.charge_d.origin, self.charge_d.length, self.charge_d.height, \
             edgecolor=self.charge_d.line, facecolor=self.charge_d.fill))
-        self.axes.text(self.charge_d.origin[0]-2, self.charge_d.origin[1]+2.5, 'Charge 2')
+        self.map_ax.text(self.charge_d.origin[0]-2, self.charge_d.origin[1]+2.5, 'Charge 2')
 
         # reset the table
-        self.add_table(world_state=None)
+        self.update_table()
 
 
     def add_robot(self, pose):
@@ -131,56 +164,45 @@ class WorldUI:
 
         for i in range(n_light):
             self.item_l.set_origin(origin_lx - i, origin_ly)
-            self.axes.add_patch(Rectangle(self.item_l.origin, self.item_l.length, self.item_l.height, \
+            self.map_ax.add_patch(Rectangle(self.item_l.origin, self.item_l.length, self.item_l.height, \
                 edgecolor=self.item_l.line, facecolor=self.item_l.fill))
 
         origin_hx = self.conv_h.origin[0] + self.conv_h.length - self.item_h.length*1.5
         origin_hy = self.conv_h.origin[1] + 0.5*(self.conv_h.height - self.item_h.height)
         for i in range(n_heavy):
             self.item_h.set_origin(origin_hx - i, origin_hy)
-            self.axes.add_patch(Rectangle(self.item_h.origin, self.item_h.length, self.item_h.height, \
+            self.map_ax.add_patch(Rectangle(self.item_h.origin, self.item_h.length, self.item_h.height, \
                 edgecolor=self.item_h.line, facecolor=self.item_h.fill))
 
 
-    def add_table(self, world_state=None, animated=False):
+    def update_table(self, world_state=None, animated=False):
         """
         Plot a table summing up the world state.
         If no object world state is given, the table gets resetted.
         """
-        headers = ['robot pose', 'battery lv', 'carried weight', 'carried light', 'carried heavy', \
-            'heavy in conveyor', 'light in conveyor', 'delivered heavy', 'delivered light']
-
-        cell_text = []
         if world_state is not None:
-            robot_pos = (world_state.robot_pos.x, world_state.robot_pos.x)
-            values = [robot_pos, world_state.battery_level, world_state.carried_weight, \
-                world_state.carried_light, world_state.carried_heavy, world_state.cnv_n_light, \
-                world_state.cnv_n_heavy, world_state.delivered_heavy, world_state.delivered_light]
-            for val in values:
-                cell_text.append([str(val)])
+            robot_pos = (world_state.robot_pos.x, world_state.robot_pos.y)
+            self.table.get_celld()[(0, 0)].get_text().set_text(str(robot_pos))
+            self.table.get_celld()[(1, 0)].get_text().set_text(str(world_state.battery_level))
+            self.table.get_celld()[(2, 0)].get_text().set_text(str(world_state.carried_weight))
+            self.table.get_celld()[(3, 0)].get_text().set_text(str(world_state.carried_light))
+            self.table.get_celld()[(4, 0)].get_text().set_text(str(world_state.carried_heavy))
+            self.table.get_celld()[(5, 0)].get_text().set_text(str(world_state.cnv_n_heavy))
+            self.table.get_celld()[(6, 0)].get_text().set_text(str(world_state.cnv_n_light))
+            self.table.get_celld()[(7, 0)].get_text().set_text(str(world_state.delivered_heavy))
+            self.table.get_celld()[(8, 0)].get_text().set_text(str(world_state.delivered_light))
         else:
-            robot_pos = ('?','?')
-            cell_text = [[robot_pos], ['?'], ['0'], ['0'], ['0'], ['0'], ['0'], ['0'], ['0']]
+            self.table.get_celld()[(0, 0)].get_text().set_text('(?, ?)')
+            self.table.get_celld()[(1, 0)].get_text().set_text('?')
+            self.table.get_celld()[(2, 0)].get_text().set_text('0')
+            self.table.get_celld()[(3, 0)].get_text().set_text('0')
+            self.table.get_celld()[(4, 0)].get_text().set_text('0')
+            self.table.get_celld()[(5, 0)].get_text().set_text('0')
+            self.table.get_celld()[(6, 0)].get_text().set_text('0')
+            self.table.get_celld()[(7, 0)].get_text().set_text('0')
+            self.table.get_celld()[(8, 0)].get_text().set_text('0')
 
-        rcolors = plt.cm.BuPu(np.full(len(headers), 0.1))
-        #Add a table at the bottom of the axes
-        the_table = plt.table(cellText=cell_text,
-                              rowLabels=headers,
-                              rowColours=rcolors,
-                              rowLoc='right',
-                              cellLoc='left',
-                              loc='center',
-                              colWidths=[0.3 for x in cell_text])
-        the_table.scale(1, 1.5)
-        the_table.auto_set_font_size(False)
-        the_table.set_fontsize(9)
-        self.table_ax.add_table(the_table)
-        # Hide axes
-        self.table_ax.get_xaxis().set_visible(False)
-        self.table_ax.get_yaxis().set_visible(False)
-        # Hide axes border
-        self.table_ax.axis('off')
-
+        plt.draw()
 
     def add_state(self, world_state, animated=False):
         """
@@ -191,7 +213,7 @@ class WorldUI:
         self.reset_world()
         self.add_items(world_state.cnv_n_light, world_state.cnv_n_heavy)
         self.add_robot((world_state.robot_pos.x, world_state.robot_pos.y))
-        self.add_table(world_state, animated=animated)
+        self.update_table(world_state, animated=animated)
 
 
     def save_world(self, name):

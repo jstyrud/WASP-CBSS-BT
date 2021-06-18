@@ -8,6 +8,38 @@ from simulation.py_trees_interface import PyTree
 import simulation.tests.behaviors_states as behaviors
 behavior_tree.load_settings_from_file('simulation/tests/BT_TEST_SETTINGS.yaml')
 
+def test_is_parameterized_condition_node():
+    """ Tests is_parameterized_condition_node function """
+    assert behavior_tree.is_parameterized_condition_node('d > 5?')
+    assert behavior_tree.is_parameterized_condition_node('d < 3?')
+    assert behavior_tree.is_parameterized_condition_node('e < 3.1?')
+    assert behavior_tree.is_parameterized_condition_node('e > 1.2?')
+    assert behavior_tree.is_parameterized_condition_node('value check > 1.2?')
+    assert not behavior_tree.is_parameterized_condition_node('f < 4?')
+    assert not behavior_tree.is_parameterized_condition_node('d < f')
+    assert not behavior_tree.is_parameterized_condition_node('c0')
+
+def test_is_condition_node():
+    """ Tests is_condition_node function """
+    assert behavior_tree.is_condition_node('d > 5?')
+    assert behavior_tree.is_condition_node('d < 3?')
+    assert behavior_tree.is_condition_node('e < 3.1?')
+    assert behavior_tree.is_condition_node('e > 1.2?')
+    assert behavior_tree.is_condition_node('value check > 1.2?')
+    assert not behavior_tree.is_condition_node('f < 4?')
+    assert not behavior_tree.is_condition_node('d < f')
+    assert behavior_tree.is_condition_node('c0')
+
+def test_get_random_condition_node():
+    """ Tests get_random_condition_node function """
+    for _ in range(10):
+        assert behavior_tree.is_condition_node(behavior_tree.get_random_condition_node())
+
+def test_get_random_leaf_node():
+    """ Tests get_random_leaf_node function """
+    for _ in range(10):
+        assert behavior_tree.is_leaf_node(behavior_tree.get_random_leaf_node())
+
 def test_init():
     """ Tests init function """
     _ = behavior_tree.BT([])
@@ -230,7 +262,7 @@ def test_add_node():
     assert bt.bt == ['s(', 'a0', ')']
 
     bt.set(['s(', 'a0', 'a0', ')']).add_node(2)
-    assert bt.bt == ['s(', 'a0', 'a3', 'a0', ')']
+    assert bt.bt == ['s(', 'a0', 'd > 55?', 'a0', ')']
 
     bt.set(['s(', 'a0', 'f(', 'a0', 'a0', ')', 'a0', ')']).add_node(2, 'a0')
     assert bt.bt == ['s(', 'a0', 'a0', 'f(', 'a0', 'a0', ')', 'a0', ')']

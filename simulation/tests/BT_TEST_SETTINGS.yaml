@@ -5,6 +5,10 @@ sequence_nodes:
 condition_nodes:
     - 'c0'
     - 'c1'
+parameterized_condition_nodes:
+   d: {min: 0, max: 100, step: 5}
+   e: {min: 0, max: 100, step: 5}
+   value check: {min: 0, max: 100, step: 5}
 action_nodes:
     - 'a0'
     - 'a1'

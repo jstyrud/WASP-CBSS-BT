@@ -26,7 +26,8 @@ def test_charge_and_light():
 
     individual = ['s(', 'f(', 's(', 'battery level < 90', 'at station CHARGE1', 'charge', ')', \
                               'battery level > 50', 's(', 'move to CHARGE1', 'charge', ')', ')', \
-                        'f(', 'carried weight > 0', 's(', 'move to CONVEYOR_LIGHT', 'f(', 'pick', 'idle', ')', ')', ')', \
+                        'f(', 'carried weight > 0', \
+                              's(', 'move to CONVEYOR_LIGHT', 'f(', 'pick', 'idle', ')', ')', ')', \
                         'move to DELIVERY', 'place', ')']
 
     notebook_interface.plot_individual('', 'test', individual)
@@ -41,7 +42,8 @@ def test_charge_and_heavy():
 
     individual = ['s(', 'f(', 's(', 'battery level < 90', 'at station CHARGE1', 'charge', ')', \
                               'battery level > 50', 's(', 'move to CHARGE1', 'charge', ')', ')', \
-                        'f(', 'carried weight > 0', 's(', 'move to CONVEYOR_HEAVY', 'f(', 'pick', 'idle', ')', ')', ')', \
+                        'f(', 'carried weight > 0', \
+                              's(', 'move to CONVEYOR_HEAVY', 'f(', 'pick', 'idle', ')', ')', ')', \
                         'move to DELIVERY', 'place', ')']
 
     notebook_interface.plot_individual('', 'test', individual)
@@ -56,7 +58,8 @@ def test_step():
 
     individual = ['s(', 'f(', 's(', 'battery level < 90', 'at station CHARGE1', 'charge', ')', \
                               'battery level > 50', 's(', 'move to CHARGE1', 'charge', ')', ')', \
-                        'f(', 'carried weight > 0', 's(', 'move to CONVEYOR_HEAVY', 'f(', 'pick', 'idle', ')', ')', ')', \
+                        'f(', 'carried weight > 0', \
+                              's(', 'move to CONVEYOR_HEAVY', 'f(', 'pick', 'idle', ')', ')', ')', \
                         'move to DELIVERY', 'place', ')']
 
     environment.get_fitness(individual, max_ticks=100, show_world=False)

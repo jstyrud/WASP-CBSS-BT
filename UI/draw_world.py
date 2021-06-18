@@ -40,16 +40,16 @@ class WorldUI:
         # initialize Map object
         self.map = Object(x=0, y=0, l=25, h=15, line='black', fill='white')
         # initialize Conveyors (L: light objects, H: heavy objects)
-        self.convL = Object(x=1, y=2, l=10, h=2, line='black', fill='gainsboro')
-        self.convH = Object(x=1, y=11, l=10, h=2, line='black', fill='gainsboro')
+        self.conv_l = Object(x=1, y=2, l=10, h=2, line='black', fill='gainsboro')
+        self.conv_h = Object(x=1, y=11, l=10, h=2, line='black', fill='gainsboro')
         # initialize Delivery
         self.delivery = Object(x=22, y=5, l=3, h=5, line='red', fill='gainsboro')
         # initialize Charging stations (C: near conveyors, D: near delivery)
-        self.chargeC = Object(x=0, y=6.5, l=1, h=2, line='black', fill='limegreen')
-        self.chargeD = Object(x=24, y=11, l=1, h=2, line='black', fill='limegreen')
+        self.charge_c = Object(x=0, y=6.5, l=1, h=2, line='black', fill='limegreen')
+        self.charge_d = Object(x=24, y=11, l=1, h=2, line='black', fill='limegreen')
         # initialize the Item objects (L: light objects, H: heavy objects)
-        self.itemL = Object(x=0, y=0, l=0.5, h=0.5, line='red', fill='red')
-        self.itemH = Object(x=0, y=0, l=0.5, h=1, line='blue', fill='blue')
+        self.item_l = Object(x=0, y=0, l=0.5, h=0.5, line='red', fill='red')
+        self.item_h = Object(x=0, y=0, l=0.5, h=1, line='blue', fill='blue')
 
     def reset_world(self):
         """
@@ -64,27 +64,27 @@ class WorldUI:
         # - black entry point
         # - black band lines
         # - label
-        self.axes.add_patch(Rectangle(self.convL.origin, self.convL.length, self.convL.height, \
-                                      edgecolor=self.convL.line, facecolor=self.convL.fill))
-        self.axes.add_patch(Rectangle((self.convL.origin[0]-1, self.convL.origin[1]-1), 1, 4, \
+        self.axes.add_patch(Rectangle(self.conv_l.origin, self.conv_l.length, self.conv_l.height, \
+                                      edgecolor=self.conv_l.line, facecolor=self.conv_l.fill))
+        self.axes.add_patch(Rectangle((self.conv_l.origin[0]-1, self.conv_l.origin[1]-1), 1, 4, \
             edgecolor='black', facecolor='black'))
-        for i in range(self.convL.length):
-            x_points = [self.convL.origin[0]+i, self.convL.origin[0]+i]
-            y_points = [self.convL.origin[1], self.convL.origin[1]+self.convL.height]
+        for i in range(self.conv_l.length):
+            x_points = [self.conv_l.origin[0]+i, self.conv_l.origin[0]+i]
+            y_points = [self.conv_l.origin[1], self.conv_l.origin[1]+self.conv_l.height]
             line = lines.Line2D(x_points, y_points, color='black', axes=self.axes)
             self.axes.add_line(line)
-        self.axes.text(self.convL.origin[0]+0.5, self.convL.origin[1]-1.5, 'Conveyor LIGHT')
+        self.axes.text(self.conv_l.origin[0]+0.5, self.conv_l.origin[1]-1.5, 'Conveyor LIGHT')
 
-        self.axes.add_patch(Rectangle(self.convH.origin, self.convH.length, self.convH.height,  \
-                                      edgecolor=self.convH.line, facecolor=self.convH.fill))
-        self.axes.add_patch(Rectangle((self.convH.origin[0]-1, self.convH.origin[1]-1), 1, 4, \
+        self.axes.add_patch(Rectangle(self.conv_h.origin, self.conv_h.length, self.conv_h.height,  \
+                                      edgecolor=self.conv_h.line, facecolor=self.conv_h.fill))
+        self.axes.add_patch(Rectangle((self.conv_h.origin[0]-1, self.conv_h.origin[1]-1), 1, 4, \
             edgecolor='black', facecolor='black'))
-        for i in range(self.convH.length):
-            x_points = [self.convH.origin[0]+i, self.convH.origin[0]+i]
-            y_points = [self.convH.origin[1], self.convH.origin[1]+self.convH.height]
+        for i in range(self.conv_h.length):
+            x_points = [self.conv_h.origin[0]+i, self.conv_h.origin[0]+i]
+            y_points = [self.conv_h.origin[1], self.conv_h.origin[1]+self.conv_h.height]
             line = lines.Line2D(x_points, y_points, color='black', axes=self.axes)
             self.axes.add_line(line)
-        self.axes.text(self.convH.origin[0]+0.5, self.convH.origin[1]+self.convH.height+1, 'Conveyor HEAVY')
+        self.axes.text(self.conv_h.origin[0]+0.5, self.conv_h.origin[1]+self.conv_h.height+1, 'Conveyor HEAVY')
 
         # add the Delivery area
         self.axes.add_patch(Rectangle(self.delivery.origin, self.delivery.length, self.delivery.height,  \
@@ -92,12 +92,12 @@ class WorldUI:
         self.axes.text(self.delivery.origin[0]-0.5, self.delivery.origin[1]-1, 'Delivery')
 
         # add the Chargin stations
-        self.axes.add_patch(Rectangle(self.chargeC.origin, self.chargeC.length, self.chargeC.height, \
-            edgecolor=self.chargeC.line, facecolor=self.chargeC.fill))
-        self.axes.text(self.chargeC.origin[0]-0.5, self.chargeC.origin[1]-1, 'Charge 1')
-        self.axes.add_patch(Rectangle(self.chargeD.origin, self.chargeD.length, self.chargeD.height, \
-            edgecolor=self.chargeD.line, facecolor=self.chargeD.fill))
-        self.axes.text(self.chargeD.origin[0]-2, self.chargeD.origin[1]+2.5, 'Charge 2')
+        self.axes.add_patch(Rectangle(self.charge_c.origin, self.charge_c.length, self.charge_c.height, \
+            edgecolor=self.charge_c.line, facecolor=self.charge_c.fill))
+        self.axes.text(self.charge_c.origin[0]-0.5, self.charge_c.origin[1]-1, 'Charge 1')
+        self.axes.add_patch(Rectangle(self.charge_d.origin, self.charge_d.length, self.charge_d.height, \
+            edgecolor=self.charge_d.line, facecolor=self.charge_d.fill))
+        self.axes.text(self.charge_d.origin[0]-2, self.charge_d.origin[1]+2.5, 'Charge 2')
 
     def add_robot(self, pose):
         """
@@ -113,19 +113,19 @@ class WorldUI:
         Add the heavy and light items to the conveyor
         """
         self.reset_world()
-        origin_lX = self.convL.origin[0] + self.convL.length - self.itemL.length*1.5
-        origin_lY = self.convL.origin[1] + 0.5*(self.convL.height - self.itemL.height)
+        origin_lx = self.conv_l.origin[0] + self.conv_l.length - self.item_l.length*1.5
+        origin_ly = self.conv_l.origin[1] + 0.5*(self.conv_l.height - self.item_l.height)
         for i in range(n_light):
-            self.itemL.set_origin(origin_lX - i, origin_lY)
-            self.axes.add_patch(Rectangle(self.itemL.origin, self.itemL.length, self.itemL.height, \
-                edgecolor=self.itemL.line, facecolor=self.itemL.fill))
+            self.item_l.set_origin(origin_lx - i, origin_ly)
+            self.axes.add_patch(Rectangle(self.item_l.origin, self.item_l.length, self.item_l.height, \
+                edgecolor=self.item_l.line, facecolor=self.item_l.fill))
 
-        origin_hX = self.convH.origin[0] + self.convH.length - self.itemH.length*1.5
-        origin_hY = self.convH.origin[1] + 0.5*(self.convH.height - self.itemH.height)
+        origin_hx = self.conv_h.origin[0] + self.conv_h.length - self.item_h.length*1.5
+        origin_hy = self.conv_h.origin[1] + 0.5*(self.conv_h.height - self.item_h.height)
         for i in range(n_heavy):
-            self.itemH.set_origin(origin_hX - i, origin_hY)
-            self.axes.add_patch(Rectangle(self.itemH.origin, self.itemH.length, self.itemH.height, \
-                edgecolor=self.itemH.line, facecolor=self.itemH.fill))
+            self.item_h.set_origin(origin_hx - i, origin_hy)
+            self.axes.add_patch(Rectangle(self.item_h.origin, self.item_h.length, self.item_h.height, \
+                edgecolor=self.item_h.line, facecolor=self.item_h.fill))
 
 
     def add_state(self, world_state):
@@ -158,5 +158,8 @@ class WorldUI:
         self.camera.snap()
 
     def animate(self):
+        """
+        Save an animated gif of the world, one frame per tick
+        """
         animation = self.camera.animate()
         animation.save('animation.gif', writer='imagemagick')

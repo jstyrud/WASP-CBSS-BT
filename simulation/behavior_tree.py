@@ -3,6 +3,7 @@
 Class for handling string representations of behavior trees
 """
 import random
+import re
 import yaml
 
 # Below are lists of the possible node types
@@ -27,6 +28,11 @@ global CONDITION_NODES
 """
 Conditions nodes are childless leaf nodes that never return RUNNING state.
 They may never be the last child of any parent.
+"""
+
+global PARAMETERIZED_CONDITION_NODES
+"""
+Condition nodes with a value parameter, making it to many to list all
 """
 
 global ACTION_NODES
@@ -56,7 +62,7 @@ set of children and subtrees
 
 global LEAF_NODES
 """
-CONDITIONS + ACTION_NODES + ATOMIC_FALLBACK_NODES + ATOMIC_SEQUENCE_NODES
+CONDITION_NODES + ACTION_NODES + ATOMIC_FALLBACK_NODES + ATOMIC_SEQUENCE_NODES
 Any kind of leaf node.
 """
 
@@ -80,6 +86,7 @@ def load_settings_from_file(file):
     global SEQUENCE_NODES
     global CONTROL_NODES
     global CONDITION_NODES
+    global PARAMETERIZED_CONDITION_NODES
     global ACTION_NODES
     global ATOMIC_FALLBACK_NODES
     global ATOMIC_SEQUENCE_NODES
@@ -127,6 +134,10 @@ def load_settings_from_file(file):
     LEAF_NODES += CONDITION_NODES
     ALL_NODES += CONDITION_NODES
     try:
+        PARAMETERIZED_CONDITION_NODES = bt_settings["parameterized_condition_nodes"]
+    except KeyError:
+        pass
+    try:
         ACTION_NODES = bt_settings["action_nodes"]
     except KeyError:
         pass
@@ -161,6 +172,84 @@ def get_action_list():
     """
     global ACTION_NODES
     return ACTION_NODES
+
+def is_parameterized_condition_node(node):
+    """
+    Returns True if node is in PARAMETERIZED_CONDITION_NODES,
+    False otherwise
+    """
+    if re.sub(r'\d+', '', node).replace(' > ', '').replace(' < ', '').replace('.', '').replace('?', '') \
+       in PARAMETERIZED_CONDITION_NODES:
+        return True
+    return False
+
+def add_random_parameter(node):
+    """
+    Adds a random parameter to parameterized node
+    """
+    minval = PARAMETERIZED_CONDITION_NODES[node]['min']
+    maxval = PARAMETERIZED_CONDITION_NODES[node]['max']
+    step = PARAMETERIZED_CONDITION_NODES[node]['step']
+    value = random.randrange(minval, maxval, step)
+
+    if random.random() > 0.5:
+        node += ' > '
+    else:
+        node += ' < '
+
+    node += str(value)
+    node += '?'
+
+    return node
+
+def is_condition_node(node):
+    """
+    Returns True if node is condition node,
+    False otherwise
+    """
+    if node in CONDITION_NODES or is_parameterized_condition_node(node):
+        return True
+    return False
+
+def get_random_condition_node():
+    """
+    Returns a random condition node
+    """
+    node = random.choice(CONDITION_NODES + list(PARAMETERIZED_CONDITION_NODES.keys()))
+
+    if node in PARAMETERIZED_CONDITION_NODES:
+        node = add_random_parameter(node)
+
+    return node
+
+def is_leaf_node(node):
+    """
+    Returns True if node is condition node,
+    False otherwise
+    """
+    if node in LEAF_NODES or is_parameterized_condition_node(node):
+        return True
+    return False
+
+def get_random_leaf_node():
+    """
+    Returns a random leaf node
+    """
+    node = random.choice(LEAF_NODES + list(PARAMETERIZED_CONDITION_NODES.keys()))
+
+    if node in PARAMETERIZED_CONDITION_NODES:
+        node = add_random_parameter(node)
+
+    return node
+
+def is_valid_node(node):
+    """
+    Returns True if node is valid node,
+    False otherwise
+    """
+    if node in ALL_NODES or is_parameterized_condition_node(node):
+        return True
+    return False
 
 class BT:
     """
@@ -207,7 +296,7 @@ class BT:
                     # add nodes to match the number of individuals defined in length
                     # this is required when random node gives 'up' nodes
                     # condition nodes make it more likely to be valid
-                    self.bt += [random.choice(CONDITION_NODES)]
+                    self.bt += [get_random_condition_node()]
                 if self.length() < length:
                     self.bt += [random.choice(BEHAVIOR_NODES)]
                 self.close()
@@ -235,10 +324,10 @@ class BT:
                 if (self.bt[i] in CONTROL_NODES) and (self.bt[i+1] in UP_NODE):
                     valid = False
                 #Identical condition nodes directly after one another - waste
-                elif self.bt[i] in CONDITION_NODES and self.bt[i] == self.bt[i+1]:
+                elif self.bt[i] == self.bt[i+1] and is_condition_node(self.bt[i]):
                     valid = False
                 # check for non-BT elements
-                elif self.bt[i] not in ALL_NODES:
+                elif not is_valid_node(self.bt[i]):
                     valid = False
 
             if valid:
@@ -384,7 +473,7 @@ class BT:
         """
         if random.random() < 0.5:
             return random.choice(CONTROL_NODES)
-        return random.choice(LEAF_NODES)
+        return get_random_leaf_node()
 
     def change_node(self, index, new_node=None):
         """
@@ -397,16 +486,16 @@ class BT:
             new_node = BT.random_node()
 
         # Change control node to leaf node, remove whole subtree
-        if new_node in LEAF_NODES and self.bt[index] in CONTROL_NODES:
+        if self.bt[index] in CONTROL_NODES and is_leaf_node(new_node):
             self.delete_node(index)
             self.bt.insert(index, new_node)
 
         # Change leaf node to control node. Add up and extra condition/behavior node child
-        elif new_node in CONTROL_NODES and self.bt[index] in LEAF_NODES:
+        elif new_node in CONTROL_NODES and is_leaf_node(self.bt[index]):
             old_node = self.bt[index]
             self.bt[index] = new_node
             if old_node in BEHAVIOR_NODES:
-                self.bt.insert(index + 1, random.choice(LEAF_NODES))
+                self.bt.insert(index + 1, get_random_leaf_node())
                 self.bt.insert(index + 2, old_node)
             else: #CONDITION_NODE
                 self.bt.insert(index + 1, old_node)
@@ -428,7 +517,7 @@ class BT:
                 self.bt.append(UP_NODE[0])
             else:
                 self.bt.insert(index, new_node)
-                self.bt.insert(index + 1, random.choice(LEAF_NODES))
+                self.bt.insert(index + 1, get_random_leaf_node())
                 self.bt.insert(index + 2, random.choice(BEHAVIOR_NODES))
                 self.bt.insert(index + 3, UP_NODE[0])
         else:
@@ -518,10 +607,10 @@ class BT:
         """
         subtree = []
 
-        if self.bt[index] in LEAF_NODES:
-            subtree = [self.bt[index]]
-        elif self.bt[index] in CONTROL_NODES:
+        if self.bt[index] in CONTROL_NODES:
             subtree = self.bt[index : self.find_up_node(index) + 1]
+        elif is_leaf_node(self.bt[index]):
+            subtree = [self.bt[index]]
         else:
             subtree = []
 

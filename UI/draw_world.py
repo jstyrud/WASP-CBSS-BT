@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as lines
 from matplotlib.patches import RegularPolygon, Rectangle
 from celluloid import Camera
+from copy import copy
 
 class Object:
     """ Class for graphical objects parameters """
@@ -62,6 +63,8 @@ class WorldUI:
         """
         Reset the world with static objects and robot in home position.
         """
+        self.map_ax.clear()
+        self.table_ax.clear()
         # add the Map
         self.map_ax.add_patch(Rectangle(self.map.origin, self.map.length, self.map.height, \
             edgecolor=self.map.line, facecolor=self.map.fill))
@@ -106,6 +109,10 @@ class WorldUI:
             edgecolor=self.chargeD.line, facecolor=self.chargeD.fill))
         self.map_ax.text(self.chargeD.origin[0]-2, self.chargeD.origin[1]+2.5, 'Charge 2')
 
+        # reset the table
+        self.add_table(world_state=None)
+
+
     def add_robot(self, pose):
         """
         Add the robot in the UI.
@@ -119,7 +126,6 @@ class WorldUI:
         """
         Add the heavy and light items to the conveyor
         """
-        self.reset_world()
         origin_lX = self.convL.origin[0] + self.convL.length - self.itemL.length*1.5
         origin_lY = self.convL.origin[1] + 0.5*(self.convL.height - self.itemL.height)
         for i in range(n_light):
@@ -135,41 +141,25 @@ class WorldUI:
                 edgecolor=self.itemH.line, facecolor=self.itemH.fill))
 
 
-    def add_state(self, world_state):
-        """
-        Add the world state in the UI.
-        It assumes that the world state has a field Robot with its pose.
-        It assumes that the world state has fields Nr. of Heavy/Light objects in the conveyors.
-        """
-        self.add_items(world_state.cnv_n_light, world_state.cnv_n_heavy)
-        self.add_robot((world_state.robot_pos.x, world_state.robot_pos.y))
-
-
-    def save_world(self, name):
-        """
-        Save the world with added patches to file.
-        """
-        self.map_ax.plot()
-        path = name + '.svg'
-        self.figure.savefig(path)
-        plt.close(self.figure)
-
-
-    def add_table(self, world_state):
+    def add_table(self, world_state=None, animated=False):
         """
         Plot a table summing up the world state.
+        If no object world state is given, the table gets resetted.
         """
-        
         headers = ['robot pose', 'battery lv', 'carried weight', 'carried light', 'carried heavy', \
             'heavy in conveyor', 'light in conveyor', 'delivered heavy', 'delivered light']
-        robot_pos = (world_state.robot_pos.x, world_state.robot_pos.x)
-        values = [robot_pos, world_state.battery_level, world_state.carried_weight, \
-            world_state.carried_light, world_state.carried_heavy, world_state.cnv_n_light, \
-            world_state.cnv_n_heavy, world_state.delivered_heavy, world_state.delivered_light]
 
         cell_text = []
-        for val in values:
-            cell_text.append([str(val)])
+        if world_state is not None:
+            robot_pos = (world_state.robot_pos.x, world_state.robot_pos.x)
+            values = [robot_pos, world_state.battery_level, world_state.carried_weight, \
+                world_state.carried_light, world_state.carried_heavy, world_state.cnv_n_light, \
+                world_state.cnv_n_heavy, world_state.delivered_heavy, world_state.delivered_light]
+            for val in values:
+                cell_text.append([str(val)])
+        else:
+            robot_pos = ('?','?')
+            cell_text = [[robot_pos], ['?'], ['0'], ['0'], ['0'], ['0'], ['0'], ['0'], ['0']]
 
         rcolors = plt.cm.BuPu(np.full(len(headers), 0.1))
         #Add a table at the bottom of the axes
@@ -179,7 +169,8 @@ class WorldUI:
                             rowLoc='right',
                             cellLoc='left',
                             loc='center',
-                            colWidths=[0.3 for x in cell_text])
+                            colWidths=[0.3 for x in cell_text],
+                            animated=animated)
         the_table.scale(1, 1.5)
         the_table.auto_set_font_size(False)
         the_table.set_fontsize(9)
@@ -188,8 +179,30 @@ class WorldUI:
         self.table_ax.get_xaxis().set_visible(False)
         self.table_ax.get_yaxis().set_visible(False)
         # Hide axes border
-        plt.box(on=None)
-        plt.draw()
+        self.table_ax.axis('off')
+
+
+    def add_state(self, world_state, animated=False):
+        """
+        Add the world state in the UI.
+        It assumes that the world state has a field Robot with its pose.
+        It assumes that the world state has fields Nr. of Heavy/Light objects in the conveyors.
+        """
+        self.reset_world()
+        self.add_items(world_state.cnv_n_light, world_state.cnv_n_heavy)
+        self.add_robot((world_state.robot_pos.x, world_state.robot_pos.y))
+        self.add_table(world_state, animated=animated)
+
+
+    def save_world(self, name):
+        """
+        Save the world with added patches to file.
+        """
+        self.map_ax.plot()
+        self.table_ax.plot()
+        path = name + '.svg'
+        self.figure.savefig(path)
+        plt.close(self.figure)
 
 
     def plot_world(self):

@@ -107,9 +107,7 @@ def test_table():
     state.delivered_heavy = 51
     state.delivered_light = 52
     world = ui.WorldUI()
-    world.reset_world()
     world.add_state(state)
-    world.add_table(state)
     world.save_world('UI/tests/table')
 
 def test_plot():
@@ -129,15 +127,12 @@ def test_animate():
     state.cnv_n_light = 3
     state.cnv_n_heavy = 4
     world = ui.WorldUI()
-    world.reset_world()
-    world.add_state(state)
-    world.add_table(state)
+    world.add_state(state, animated=True)
     world.plot_world()
 
     state.robot_pos = simulation.Pos(21, 7.5)
     state.cnv_n_light = 1
     state.cnv_n_heavy = 1
-    world.add_state(state)
-    world.add_table(state)
+    world.add_state(state, animated=True)
     world.plot_world()
     world.animate()

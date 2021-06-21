@@ -3,12 +3,16 @@
 Class to print the state of the world
 """
 
+from typing import Tuple
+from dataclasses import dataclass
+from dataclasses import field
 import math
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.lines as lines
 from matplotlib.patches import RegularPolygon, Rectangle
 from celluloid import Camera
+
 
 class Object:
     """ Class for graphical objects parameters """
@@ -58,12 +62,15 @@ class WorldUI:
         self.item_l = Object(x=0, y=0, l=0.5, h=0.5, line='red', fill='red')
         self.item_h = Object(x=0, y=0, l=0.5, h=1, line='blue', fill='blue')
 
+        self.var_map = self.init_map()
+        self.var_tab = self.init_table()
 
-    def reset_world(self):
+
+    def init_map(self):
         """
-        Reset the world with static objects and robot in home position.
+        Add to the map subplot the static elements.
+        Returns variable items.
         """
-        self.map_ax.clear()
         # add the Map
         self.map_ax.add_patch(Rectangle(self.map.origin, self.map.length, self.map.height, \
             edgecolor=self.map.line, facecolor=self.map.fill))
@@ -108,44 +115,37 @@ class WorldUI:
             edgecolor=self.charge_d.line, facecolor=self.charge_d.fill))
         self.map_ax.text(self.charge_d.origin[0]-2, self.charge_d.origin[1]+2.5, 'Charge 2')
 
-        self.update_text()
-
-
-    def add_robot(self, pose):
-        """
-        Add the robot in the UI.
-        """
-        self.map_ax.add_patch(RegularPolygon(pose, 8, radius=1, orientation=math.pi/8, \
-            edgecolor='black', facecolor='paleturquoise'))
-        self.map_ax.text(pose[0]-0.4, pose[1]-0.2, 'R', fontweight='bold')
-
-
-    def add_items(self, n_light, n_heavy):
-        """
-        Add the heavy and light items to the conveyor
-        """
+        # add the Items
+        light_items = []
         origin_lx = self.conv_l.origin[0] + self.conv_l.length - self.item_l.length*1.5
         origin_ly = self.conv_l.origin[1] + 0.5*(self.conv_l.height - self.item_l.height)
 
-        for i in range(n_light):
+        for i in range(10):
             self.item_l.set_origin(origin_lx - i, origin_ly)
-            self.map_ax.add_patch(Rectangle(self.item_l.origin, self.item_l.length, self.item_l.height, \
-                edgecolor=self.item_l.line, facecolor=self.item_l.fill))
+            light_items.append(self.map_ax.add_patch(Rectangle(self.item_l.origin, self.item_l.length, self.item_l.height, \
+                edgecolor=self.item_l.line, facecolor=self.item_l.fill, visible=False)))
 
+        heavy_items = []
         origin_hx = self.conv_h.origin[0] + self.conv_h.length - self.item_h.length*1.5
         origin_hy = self.conv_h.origin[1] + 0.5*(self.conv_h.height - self.item_h.height)
-        for i in range(n_heavy):
+        for i in range(10):
             self.item_h.set_origin(origin_hx - i, origin_hy)
-            self.map_ax.add_patch(Rectangle(self.item_h.origin, self.item_h.length, self.item_h.height, \
-                edgecolor=self.item_h.line, facecolor=self.item_h.fill))
+            heavy_items.append(self.map_ax.add_patch(Rectangle(self.item_h.origin, self.item_h.length, self.item_h.height, \
+                edgecolor=self.item_h.line, facecolor=self.item_h.fill, visible=False)))
+
+        # add the Robot
+        robot_patch = self.map_ax.add_patch(RegularPolygon((2, 7.5), 8, radius=1, orientation=math.pi/8, \
+            edgecolor='black', facecolor='paleturquoise'))
+        robot_text = self.map_ax.text(2-0.4, 7.5-0.2, 'R', fontweight='bold')
+
+        return [robot_patch, robot_text, light_items, heavy_items]
 
 
-    def update_text(self, world_state=None):
+    def init_table(self):
         """
-        Text informing about the world state.
+        Add to the table subplot the static elements.
+        Returns variable items.
         """
-        self.text_ax.clear()
-
         # add dummy patch like the map
         self.text_ax.add_patch(Rectangle(self.map.origin, self.map.length/3, self.map.height, \
             edgecolor='white', facecolor='white'))
@@ -160,34 +160,91 @@ class WorldUI:
         self.text_ax.text(1, 7, 'delivered heavy')
         self.text_ax.text(1, 6, 'delivered light')
 
+        robot_pose = self.text_ax.text(7, 14, '(?, ?)')
+        battery_lv = self.text_ax.text(7, 13, '?')
+        carried = self.text_ax.text(7, 12, '0')
+        carried_l = self.text_ax.text(7, 11, '0')
+        carried_h = self.text_ax.text(7, 10, '0')
+        conv_h = self.text_ax.text(7, 9, '0')
+        conv_l = self.text_ax.text(7, 8, '0')
+        del_h = self.text_ax.text(7, 7, '0')
+        del_l = self.text_ax.text(7, 6, '0')
+
         # Hide axes
         self.text_ax.get_xaxis().set_visible(False)
         self.text_ax.get_yaxis().set_visible(False)
         # Hide axes border
         self.text_ax.axis('off')
 
+        return [robot_pose, battery_lv, carried, carried_l, carried_h, conv_h, conv_l, del_h, del_l]
+
+
+    def reset_world(self):
+        """
+        Reset the world with static objects and robot in home position.
+        """
+        # reset robot
+        self.var_map[0].xy = (2, 7.5)
+        self.var_map[1].set_position((2-0.4, 7.5-0.2))
+
+        for i in range(10):
+            self.var_map[2][i].set_visible(False)
+
+        for i in range(10):
+            self.var_map[3][i].set_visible(False)
+
+        self.update_text()
+
+
+    def update_robot(self, pose=None):
+        """
+        Add the robot in the UI.
+        """
+        if pose is not None:
+            self.var_map[0].xy = pose
+            self.var_map[1].set_position((pose[0]-0.4, pose[1]-0.2))
+        else:
+            self.var_map[0].xy = pose
+            self.var_map[1].set_position((2-0.4, 7.5-0.2))
+
+
+    def add_items(self, n_light, n_heavy):
+        """
+        Add the heavy and light items to the conveyor
+        """
+        for i in range(n_light):
+            self.var_map[2][i].set_visible(True)
+
+        for i in range(n_heavy):
+            self.var_map[3][i].set_visible(True)
+
+
+    def update_text(self, world_state=None):
+        """
+        Text informing about the world state.
+        """
+
         if world_state is not None:
             robot_pos = (world_state.robot_pos.x, world_state.robot_pos.y)
-            self.text_ax.text(7, 14, str(robot_pos))
-            self.text_ax.text(7, 13, str(world_state.battery_level))
-            self.text_ax.text(7, 12, str(world_state.carried_weight))
-            self.text_ax.text(7, 11, str(world_state.carried_light))
-            self.text_ax.text(7, 10, str(world_state.carried_heavy))
-            self.text_ax.text(7, 9, str(world_state.cnv_n_heavy))
-            self.text_ax.text(7, 8, str(world_state.cnv_n_light))
-            self.text_ax.text(7, 7, str(world_state.delivered_heavy))
-            self.text_ax.text(7, 6, str(world_state.delivered_light))
+            self.var_tab[0].set_text(str(robot_pos))
+            self.var_tab[1].set_text(str(world_state.battery_level))
+            self.var_tab[2].set_text(str(world_state.carried_weight))
+            self.var_tab[3].set_text(str(world_state.carried_light))
+            self.var_tab[4].set_text(str(world_state.carried_heavy))
+            self.var_tab[5].set_text(str(world_state.cnv_n_heavy))
+            self.var_tab[6].set_text(str(world_state.cnv_n_light))
+            self.var_tab[7].set_text(str(world_state.delivered_heavy))
+            self.var_tab[8].set_text(str(world_state.delivered_light))
         else:
-            self.text_ax.text(7, 14, '(?, ?)')
-            self.text_ax.text(7, 13, '?')
-            self.text_ax.text(7, 12, '0')
-            self.text_ax.text(7, 11, '0')
-            self.text_ax.text(7, 10, '0')
-            self.text_ax.text(7, 9, '0')
-            self.text_ax.text(7, 8, '0')
-            self.text_ax.text(7, 7, '0')
-            self.text_ax.text(7, 6, '0')
-
+            self.var_tab[0].set_text('(?, ?)')
+            self.var_tab[1].set_text('?')
+            self.var_tab[2].set_text('0')
+            self.var_tab[3].set_text('0')
+            self.var_tab[4].set_text('0')
+            self.var_tab[5].set_text('0')
+            self.var_tab[6].set_text('0')
+            self.var_tab[7].set_text('0')
+            self.var_tab[8].set_text('0')
 
 
     def add_state(self, world_state):
@@ -198,7 +255,7 @@ class WorldUI:
         """
         self.reset_world()
         self.add_items(world_state.cnv_n_light, world_state.cnv_n_heavy)
-        self.add_robot((world_state.robot_pos.x, world_state.robot_pos.y))
+        self.update_robot((world_state.robot_pos.x, world_state.robot_pos.y))
         self.update_text(world_state)
 
 

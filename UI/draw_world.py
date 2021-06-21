@@ -67,7 +67,7 @@ class WorldUI:
         """
         headers = ['robot pose', 'battery lv', 'carried weight', 'carried light', 'carried heavy', \
             'heavy in conveyor', 'light in conveyor', 'delivered heavy', 'delivered light']
-        cell_text = [[('?','?')], ['?'], ['0'], ['0'], ['0'], ['0'], ['0'], ['0'], ['0']]
+        cell_text = [['(?, ?)'], ['?'], ['0'], ['0'], ['0'], ['0'], ['0'], ['0'], ['0']]
 
         rcolors = plt.cm.BuPu(np.full(len(headers), 0.1))
         #Add a table at the bottom of the axes
@@ -199,6 +199,8 @@ class WorldUI:
             self.table.get_celld()[(6, 0)].get_text().set_text('0')
             self.table.get_celld()[(7, 0)].get_text().set_text('0')
             self.table.get_celld()[(8, 0)].get_text().set_text('0')
+
+        plt.draw()
 
 
     def add_state(self, world_state):

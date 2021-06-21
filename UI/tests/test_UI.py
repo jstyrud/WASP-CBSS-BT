@@ -38,7 +38,6 @@ def test_reset():
     world = ui.WorldUI()
     world.reset_world()
     world.save_world('UI/tests/empty_world')
-    plt.close()
 
 def test_robot():
     """
@@ -57,7 +56,6 @@ def test_robot():
     world.save_world('UI/tests/robot')
     world.reset_world()
     world.save_world('UI/tests/empty_again')
-    plt.close()
 
 def test_items():
     """
@@ -70,7 +68,6 @@ def test_items():
     world.save_world('UI/tests/items')
     world.reset_world()
     world.save_world('UI/tests/empty_again')
-    plt.close()
 
 def test_state():
     """
@@ -83,19 +80,20 @@ def test_state():
     world = ui.WorldUI()
     world.add_state(state)
     world.save_world('UI/tests/state')
-    plt.close()
 
     state.robot_pos = simulation.Pos(21, 7.5)
     state.cnv_n_light = 3
     state.cnv_n_heavy = 4
     world.add_state(state)
     world.save_world('UI/tests/new_state')
-    plt.close()
 
 def test_table():
     """
     Test the table with world state information
     """
+    world = ui.WorldUI()
+    world.save_world('UI/tests/empty_table')
+
     state = simulation.WorldState()
     state.robot_pos = simulation.Pos(23, 12)
     state.cnv_n_light = 3
@@ -106,7 +104,7 @@ def test_table():
     state.carried_weight = 30
     state.delivered_heavy = 51
     state.delivered_light = 52
-    world = ui.WorldUI()
+
     world.add_state(state)
     world.save_world('UI/tests/table')
 

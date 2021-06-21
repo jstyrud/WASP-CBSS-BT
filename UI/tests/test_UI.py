@@ -92,7 +92,7 @@ def test_table():
     Test the table with world state information
     """
     world = ui.WorldUI()
-    world.save_world('UI/tests/empty_table')
+    world.save_world('UI/tests/empty_text')
 
     state = simulation.WorldState()
     state.robot_pos = simulation.Pos(23, 12)
@@ -106,7 +106,7 @@ def test_table():
     state.delivered_light = 52
 
     world.add_state(state)
-    world.save_world('UI/tests/table')
+    world.save_world('UI/tests/text')
 
 def test_plot():
     """

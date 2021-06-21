@@ -37,7 +37,7 @@ class WorldUI:
         """
         self.figure, self.axes = plt.subplots(nrows=1, ncols=2, figsize=(12, 6), gridspec_kw={'width_ratios': [3, 1]})
         self.map_ax = self.axes[0]
-        self.table_ax = self.axes[1]
+        self.text_ax = self.axes[1]
         self.camera = Camera(self.figure)
 
         title_text = 'World State'
@@ -57,38 +57,6 @@ class WorldUI:
         # initialize the Item objects (L: light objects, H: heavy objects)
         self.item_l = Object(x=0, y=0, l=0.5, h=0.5, line='red', fill='red')
         self.item_h = Object(x=0, y=0, l=0.5, h=1, line='blue', fill='blue')
-
-        self.table = self.create_table()
-
-
-    def create_table(self):
-        """
-        Create the table object in the figure
-        """
-        headers = ['robot pose', 'battery lv', 'carried weight', 'carried light', 'carried heavy', \
-            'heavy in conveyor', 'light in conveyor', 'delivered heavy', 'delivered light']
-        cell_text = [['(?, ?)'], ['?'], ['0'], ['0'], ['0'], ['0'], ['0'], ['0'], ['0']]
-
-        rcolors = plt.cm.BuPu(np.full(len(headers), 0.1))
-        #Add a table at the bottom of the axes
-        the_table = plt.table(cellText=cell_text,
-                              rowLabels=headers,
-                              rowColours=rcolors,
-                              rowLoc='right',
-                              cellLoc='left',
-                              loc='center',
-                              colWidths=[0.3 for x in cell_text])
-        the_table.scale(1, 1.5)
-        the_table.auto_set_font_size(False)
-        the_table.set_fontsize(9)
-        self.table_ax.add_table(the_table)
-        # Hide axes
-        self.table_ax.get_xaxis().set_visible(False)
-        self.table_ax.get_yaxis().set_visible(False)
-        # Hide axes border
-        self.table_ax.axis('off')
-
-        return the_table
 
 
     def reset_world(self):
@@ -140,8 +108,7 @@ class WorldUI:
             edgecolor=self.charge_d.line, facecolor=self.charge_d.fill))
         self.map_ax.text(self.charge_d.origin[0]-2, self.charge_d.origin[1]+2.5, 'Charge 2')
 
-        # reset the table
-        self.update_table()
+        self.update_text()
 
 
     def add_robot(self, pose):
@@ -173,34 +140,54 @@ class WorldUI:
                 edgecolor=self.item_h.line, facecolor=self.item_h.fill))
 
 
-    def update_table(self, world_state=None):
+    def update_text(self, world_state=None):
         """
-        Plot a table summing up the world state.
-        If no object world state is given, the table gets resetted.
+        Text informing about the world state.
         """
+        self.text_ax.clear()
+
+        # add dummy patch like the map
+        self.text_ax.add_patch(Rectangle(self.map.origin, self.map.length/3, self.map.height, \
+            edgecolor='white', facecolor='white'))
+
+        self.text_ax.text(1, 14, 'robot pose')
+        self.text_ax.text(1, 13, 'battery lv')
+        self.text_ax.text(1, 12, 'carried weight')
+        self.text_ax.text(1, 11, 'carried light')
+        self.text_ax.text(1, 10, 'carried heavy')
+        self.text_ax.text(1, 9, 'heavy in conveyor')
+        self.text_ax.text(1, 8, 'light in conveyor')
+        self.text_ax.text(1, 7, 'delivered heavy')
+        self.text_ax.text(1, 6, 'delivered light')
+
+        # Hide axes
+        self.text_ax.get_xaxis().set_visible(False)
+        self.text_ax.get_yaxis().set_visible(False)
+        # Hide axes border
+        self.text_ax.axis('off')
+
         if world_state is not None:
             robot_pos = (world_state.robot_pos.x, world_state.robot_pos.y)
-            self.table.get_celld()[(0, 0)].get_text().set_text(str(robot_pos))
-            self.table.get_celld()[(1, 0)].get_text().set_text(str(world_state.battery_level))
-            self.table.get_celld()[(2, 0)].get_text().set_text(str(world_state.carried_weight))
-            self.table.get_celld()[(3, 0)].get_text().set_text(str(world_state.carried_light))
-            self.table.get_celld()[(4, 0)].get_text().set_text(str(world_state.carried_heavy))
-            self.table.get_celld()[(5, 0)].get_text().set_text(str(world_state.cnv_n_heavy))
-            self.table.get_celld()[(6, 0)].get_text().set_text(str(world_state.cnv_n_light))
-            self.table.get_celld()[(7, 0)].get_text().set_text(str(world_state.delivered_heavy))
-            self.table.get_celld()[(8, 0)].get_text().set_text(str(world_state.delivered_light))
+            self.text_ax.text(7, 14, str(robot_pos))
+            self.text_ax.text(7, 13, str(world_state.battery_level))
+            self.text_ax.text(7, 12, str(world_state.carried_weight))
+            self.text_ax.text(7, 11, str(world_state.carried_light))
+            self.text_ax.text(7, 10, str(world_state.carried_heavy))
+            self.text_ax.text(7, 9, str(world_state.cnv_n_heavy))
+            self.text_ax.text(7, 8, str(world_state.cnv_n_light))
+            self.text_ax.text(7, 7, str(world_state.delivered_heavy))
+            self.text_ax.text(7, 6, str(world_state.delivered_light))
         else:
-            self.table.get_celld()[(0, 0)].get_text().set_text('(?, ?)')
-            self.table.get_celld()[(1, 0)].get_text().set_text('?')
-            self.table.get_celld()[(2, 0)].get_text().set_text('0')
-            self.table.get_celld()[(3, 0)].get_text().set_text('0')
-            self.table.get_celld()[(4, 0)].get_text().set_text('0')
-            self.table.get_celld()[(5, 0)].get_text().set_text('0')
-            self.table.get_celld()[(6, 0)].get_text().set_text('0')
-            self.table.get_celld()[(7, 0)].get_text().set_text('0')
-            self.table.get_celld()[(8, 0)].get_text().set_text('0')
+            self.text_ax.text(7, 14, '(?, ?)')
+            self.text_ax.text(7, 13, '?')
+            self.text_ax.text(7, 12, '0')
+            self.text_ax.text(7, 11, '0')
+            self.text_ax.text(7, 10, '0')
+            self.text_ax.text(7, 9, '0')
+            self.text_ax.text(7, 8, '0')
+            self.text_ax.text(7, 7, '0')
+            self.text_ax.text(7, 6, '0')
 
-        plt.draw()
 
 
     def add_state(self, world_state):
@@ -212,7 +199,7 @@ class WorldUI:
         self.reset_world()
         self.add_items(world_state.cnv_n_light, world_state.cnv_n_heavy)
         self.add_robot((world_state.robot_pos.x, world_state.robot_pos.y))
-        self.update_table(world_state)
+        self.update_text(world_state)
 
 
     def save_world(self, name):
@@ -220,7 +207,7 @@ class WorldUI:
         Save the world with added patches to file.
         """
         self.map_ax.plot()
-        self.table_ax.plot()
+        self.text_ax.plot()
         path = name + '.svg'
         self.figure.savefig(path)
         plt.close(self.figure)
@@ -231,7 +218,7 @@ class WorldUI:
         Plot the world
         """
         self.map_ax.plot()
-        self.table_ax.plot()
+        self.text_ax.plot()
         self.camera.snap()
 
 

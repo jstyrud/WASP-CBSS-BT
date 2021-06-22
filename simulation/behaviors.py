@@ -42,10 +42,16 @@ def get_node_from_string(string, world_interface, verbose=False):
         node = Place(string, world_interface, verbose=verbose)
 
     elif string == 'f(':
-        node = pt.composites.Selector('Fallback')
+        node = pt.composites.Selector('Fallback', memory=False)
+        has_children = True
+    elif string == 'fm(':
+        node = pt.composites.Selector('Fallback', memory=True)
         has_children = True
     elif string == 's(':
         node = pt.composites.Sequence('Sequence', memory=False)
+        has_children = True
+    elif string == 'sm(':
+        node = pt.composites.Sequence('Sequence', memory=True)
         has_children = True
     elif string == 'p(':
         node = pt.composites.Parallel(

@@ -208,6 +208,7 @@ def test_pick():
     behavior.initialise()
     sm.state.robot_pos = simulation.get_pos(simulation.Stations.CONVEYOR_HEAVY)
     sm.state.cnv_n_heavy = 5
+    sm.ready_for_action = True
     behavior.update()
     sm.ready_for_action = True
     assert behavior.update() == pt.common.Status.SUCCESS
@@ -219,10 +220,12 @@ def test_pick():
     behavior.initialise()
     sm.state.robot_pos = simulation.get_pos(simulation.Stations.CONVEYOR_LIGHT)
     sm.state.cnv_n_heavy = 0
+    sm.ready_for_action = True
     assert behavior.update() == pt.common.Status.FAILURE
     sm.ready_for_action = True
     behavior.initialise()
     sm.state.cnv_n_light = 4
+    sm.ready_for_action = True
     behavior.update()
     sm.ready_for_action = True
     assert behavior.update() == pt.common.Status.SUCCESS
@@ -239,11 +242,12 @@ def test_place():
     sm.state.carried_heavy = 1
     sm.state.carried_light = 1
     sm.state.carried_weight = simulation.HEAVY_WEIGHT + simulation.LIGHT_WEIGHT
-
+    sm.ready_for_action = True
     assert behavior.update() == pt.common.Status.FAILURE
 
     behavior.initialise()
     sm.state.robot_pos = simulation.get_pos(simulation.Stations.DELIVERY)
+    sm.ready_for_action = True
     behavior.update()
     assert behavior.update() == pt.common.Status.SUCCESS
     assert sm.state.carried_heavy == 0

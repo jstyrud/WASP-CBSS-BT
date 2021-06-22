@@ -10,7 +10,7 @@ import simulation.fitness_function as fitness_function
 
 class Environment():
     """ Class defining the environment in which the individual operates """
-    def __init__(self, seed=0, verbose=False, fitness_coeff=None):
+    def __init__(self, seed=None, verbose=False, fitness_coeff=None):
         self.seed = seed
         self.verbose = verbose
         self.fitness_coeff = fitness_coeff

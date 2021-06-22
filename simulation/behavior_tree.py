@@ -190,7 +190,7 @@ def add_random_parameter(node):
     minval = PARAMETERIZED_CONDITION_NODES[node]['min']
     maxval = PARAMETERIZED_CONDITION_NODES[node]['max']
     step = PARAMETERIZED_CONDITION_NODES[node]['step']
-    value = random.randrange(minval, maxval, step)
+    value = random.randrange(minval, maxval + 1, step)
 
     if random.random() > 0.5:
         node += ' > '
@@ -415,7 +415,7 @@ class BT:
         """
         Removes control nodes with only one child
         """
-        for index in range(len(self.bt) -1, 0, -1):
+        for index in range(len(self.bt) -1, -1, -1):
             if self.bt[index] in CONTROL_NODES:
                 children = self.find_children(index)
                 if len(children) <= 1:

@@ -11,10 +11,12 @@ class Coefficients:
     """
     delivered_heavy: float = 2.0
     delivered_light: float = 1.0
+    blocked_heavy: float = -0.5
+    blocked_light: float = -0.25
     depth: float = 0.0
-    length: float = -0.1
+    length: float = -0.2
     ticks: float = 0.0
-    failed: float = -50.0
+    failed: float = 0.0
     timeout: float = 0.0
 
 def compute_fitness(world_interface, behavior_tree, ticks, coeff=None, verbose=False):
@@ -37,6 +39,11 @@ def compute_fitness(world_interface, behavior_tree, ticks, coeff=None, verbose=F
     fitness += coeff.delivered_light * world_interface.state.delivered_light
     if verbose:
         print("Fitness after deliveries:", fitness)
+
+    fitness += coeff.blocked_heavy * world_interface.state.blocked_heavy
+    fitness += coeff.blocked_light * world_interface.state.blocked_light
+    if verbose:
+        print("Fitness after blocked:", fitness)
 
     if behavior_tree.failed:
         fitness += coeff.failed

@@ -36,6 +36,8 @@ class WorldState:
     cnv_n_heavy: int = 0 #Number of heavy objects currently on conveyor
     delivered_heavy: int = 0
     delivered_light: int = 0
+    blocked_heavy: int = 0
+    blocked_light: int = 0
 
 class Stations(IntEnum):
     """ Indices for robot stations """
@@ -116,10 +118,11 @@ class Simulation:
     """
     Main simulation class
     """
-    def __init__(self, seed=0):
+    def __init__(self, seed=None):
         self.state = WorldState()
-        random.seed(seed)
-        self.ready_for_action = True #At most one action each tick
+        if seed is not None:
+            random.seed(seed)
+        self.ready_for_action = False #At most one action each tick
 
     def get_feedback(self):
         # pylint: disable=no-self-use
@@ -135,7 +138,9 @@ class Simulation:
     def send_references(self):
          # pylint: disable=no-self-use
         """ Dummy to fit template """
-        return
+        if self.ready_for_action:
+            self.ready_for_action = False
+            self.step() #Step simulation even if no action taken
 
     def step(self):
         """
@@ -143,12 +148,16 @@ class Simulation:
         """
 
         #Randomly add objects on conveyor
-        if random.random() < 0.05:
-            self.state.cnv_n_heavy += 1
-            self.state.cnv_n_heavy = min(self.state.cnv_n_heavy, MAX_HEAVY)
-        if random.random() < 0.1:
-            self.state.cnv_n_light += 1
-            self.state.cnv_n_light = min(self.state.cnv_n_light, MAX_LIGHT)
+        if random.random() < 0.06:
+            if self.state.cnv_n_heavy < MAX_HEAVY:
+                self.state.cnv_n_heavy += 1
+            else:
+                self.state.blocked_heavy += 1
+        if random.random() < 0.12:
+            if self.state.cnv_n_light < MAX_LIGHT:
+                self.state.cnv_n_light += 1
+            else:
+                self.state.blocked_light += 1
 
         #Deplete battery
         self.state.battery_level -= 1

@@ -173,7 +173,11 @@ def test_trim():
 
     bt.set(['s(', 'a0', ')'])
     bt.trim()
-    assert bt.bt == ['s(', 'a0', ')']
+    assert bt.bt == ['a0']
+
+    bt.set(['f(', 's(', 'a0', 'a1', ')', ')'])
+    bt.trim()
+    assert bt.bt == ['s(', 'a0', 'a1', ')']
 
 def test_depth():
     """ Tests bt_depth function """

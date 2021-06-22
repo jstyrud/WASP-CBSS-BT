@@ -44,7 +44,7 @@ unicode_symbols = {
     'left_right_arrow': console.left_right_arrow,
     'bold': console.bold,
     'bold_reset': console.reset,
-    'memory': console.circled_m,
+    'memory': 'm',
     'sequence_with_memory': u'{-}',
     'selector_with_memory': u'{o}',
     composites.Sequence: u'[-]',
@@ -454,7 +454,7 @@ def dot_tree(
         if isinstance(behaviour, composites.Composite):
             try:
                 if behaviour.memory:
-                    prefix += console.circled_m
+                    prefix += 'm'
             except AttributeError:
                 pass
             try:
@@ -669,7 +669,7 @@ def render_dot_tree(root: behaviour.Behaviour,
     filename_wo_extension_to_convert = root.name if name is None else name
     filename_wo_extension = utilities.get_valid_filename(filename_wo_extension_to_convert)
     filenames = {}
-    for extension, writer in {"dot": graph.write, "png": graph.write_png, "svg": graph.write_svg}.items():
+    for extension, writer in {"png": graph.write_png, "svg": graph.write_svg}.items():
         filename = filename_wo_extension + '.' + extension
         pathname = os.path.join(target_directory, filename)
         print("Writing {}".format(pathname))

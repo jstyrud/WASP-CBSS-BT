@@ -52,10 +52,19 @@ def test_pick():
     assert sim.pick()
     assert sim.state.carried_light == 1
 
+    sim.state.carried_weight = simulation.MAX_WEIGHT
+    assert not sim.pick()
+    assert sim.state.carried_light == 1
+
     for _ in range(10):
         sim.moveto(simulation.Stations.CONVEYOR_HEAVY)
+    sim.state.carried_weight = simulation.LIGHT_WEIGHT
     sim.state.cnv_n_heavy += 1
     assert sim.pick()
+    assert sim.state.carried_heavy == 1
+
+    sim.state.carried_weight = simulation.MAX_WEIGHT
+    assert not sim.pick()
     assert sim.state.carried_heavy == 1
 
 def test_place():

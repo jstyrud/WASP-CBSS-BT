@@ -91,9 +91,9 @@ class PyTree(pt.trees.BehaviourTree):
         Function executing the behavior tree
         """
         ticks = 0
-        max_straight_fails = 1
+        max_straight_fails = max_ticks
         straight_fails = 0
-        successes_required = 2
+        successes_required = max_ticks
         successes = 0
         status_ok = True
         if show_world:

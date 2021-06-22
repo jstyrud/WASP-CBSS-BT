@@ -144,6 +144,7 @@ log
 package.xml
 setup.cfg
 setup.py
+main.py
 *.sqlite
 *.sln
 *.pyproj

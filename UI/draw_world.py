@@ -151,21 +151,24 @@ class WorldUI:
 
         for i in range(MAX_ITEMS):
             self.item_l.set_origin(origin_lx - i, origin_ly)
-            self.var_map[MapVars.LIGHT_OBJ][i] = self.map_ax.add_patch(Rectangle(self.item_l.origin, self.item_l.length, self.item_l.height, \
-                edgecolor=self.item_l.line, facecolor=self.item_l.fill, visible=False))
+            self.var_map[MapVars.LIGHT_OBJ][i] = self.map_ax.add_patch(Rectangle(self.item_l.origin, \
+                self.item_l.length, self.item_l.height, edgecolor=self.item_l.line, \
+                facecolor=self.item_l.fill, visible=False))
 
         self.var_map[MapVars.HEAVY_OBJ] = [None]*(MAX_ITEMS)
         origin_hx = self.conv_h.origin[0] + self.conv_h.length - self.item_h.length*1.5
         origin_hy = self.conv_h.origin[1] + 0.5*(self.conv_h.height - self.item_h.height)
         for i in range(MAX_ITEMS):
             self.item_h.set_origin(origin_hx - i, origin_hy)
-            self.var_map[MapVars.HEAVY_OBJ][i] = self.map_ax.add_patch(Rectangle(self.item_h.origin, self.item_h.length, self.item_h.height, \
-                edgecolor=self.item_h.line, facecolor=self.item_h.fill, visible=False))
+            self.var_map[MapVars.HEAVY_OBJ][i] = self.map_ax.add_patch(Rectangle(self.item_h.origin, \
+                self.item_h.length, self.item_h.height, edgecolor=self.item_h.line, \
+                facecolor=self.item_h.fill, visible=False))
 
         # add the Robot
-        self.var_map[MapVars.ROBOT_OBJ] = self.map_ax.add_patch(RegularPolygon(ROBOT_HOME, 8, radius=1, orientation=math.pi/8, \
-            edgecolor='black', facecolor='paleturquoise'))
-        self.var_map[MapVars.ROBOT_LABLE] = self.map_ax.text(ROBOT_HOME[0]-0.4, ROBOT_HOME[1]-0.2, 'R', fontweight='bold')
+        self.var_map[MapVars.ROBOT_OBJ] = self.map_ax.add_patch(RegularPolygon(ROBOT_HOME, 8, radius=1, \
+            orientation=math.pi/8, edgecolor='black', facecolor='paleturquoise'))
+        self.var_map[MapVars.ROBOT_LABLE] = self.map_ax.text(ROBOT_HOME[0]-0.4, ROBOT_HOME[1]-0.2, \
+            'R', fontweight='bold')
 
         return self.var_map
 

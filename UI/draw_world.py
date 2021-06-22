@@ -137,7 +137,7 @@ class WorldUI:
         # add the Chargin stations
         self.map_ax.add_patch(Rectangle(self.charge_c.origin, self.charge_c.length, self.charge_c.height, \
             edgecolor=self.charge_c.line, facecolor=self.charge_c.fill))
-        self.map_ax.text(self.charge_c.origin[0]-0.5, self.charge_c.origin[1]-1, 'Charge 1')
+        self.map_ax.text(self.charge_c.origin[0]+0.1, self.charge_c.origin[1]-1, 'Charge 1')
         self.map_ax.add_patch(Rectangle(self.charge_d.origin, self.charge_d.length, self.charge_d.height, \
             edgecolor=self.charge_d.line, facecolor=self.charge_d.fill))
         self.map_ax.text(self.charge_d.origin[0]-2, self.charge_d.origin[1]+2.5, 'Charge 2')

@@ -61,12 +61,14 @@ def test_items():
     The feedback is visual, very few assertions.
     """
     world = ui.WorldUI()
-    world.add_items(5, 3)
+    world.update_items(5, 3)
     world.save_world('UI/tests/items')
     world.reset_world()
     world.save_world('UI/tests/empty_again')
-    world.add_items(1, 8)
+    world.update_items(1, 8)
     world.save_world('UI/tests/new_items')
+    world.update_items(0, 2)
+    world.save_world('UI/tests/few_items')
 
 def test_table():
     """
@@ -75,8 +77,14 @@ def test_table():
     """
     state = simulation.WorldState()
     state.robot_pos = simulation.Pos(23, 12)
-    state.cnv_n_light = 7
+    state.cnv_n_light = 3
     state.cnv_n_heavy = 4
+    state.battery_level = 100
+    state.carried_heavy = 10
+    state.carried_light = 20
+    state.carried_weight = 30
+    state.delivered_heavy = 51
+    state.delivered_light = 52
     world = ui.WorldUI()
     world.update_text(state)
     world.save_world('UI/tests/table')
@@ -111,13 +119,13 @@ def test_animate():
     state.cnv_n_heavy = 4
     world = ui.WorldUI()
     world.add_state(state)
-    #world.save_world('UI/tests/snap1')
-    world.plot_world()
+    world.save_world('UI/tests/snap1')
+    #world.plot_world()
 
     state.robot_pos = simulation.Pos(21, 7.5)
     state.cnv_n_light = 1
     state.cnv_n_heavy = 1
     world.add_state(state)
-    #world.save_world('UI/tests/snap2')
-    world.plot_world()
-    world.animate()
+    world.save_world('UI/tests/snap2')
+    #world.plot_world()
+    #world.animate()

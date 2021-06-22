@@ -38,7 +38,8 @@ class Environment():
 
         self.pytree.step_bt(show_world=show_world)
 
-def plot_individual(path, plot_name, individual):
-    """ Saves a graphical representation of the individual """
-    pytree = PyTree(individual[:], behaviors=behaviors)
-    pytree.save_fig(path, name=plot_name)
+    def plot_individual(self, path, plot_name, individual):
+        # pylint: disable=no-self-use
+        """ Saves a graphical representation of the individual """
+        pytree = PyTree(individual[:], behaviors=behaviors)
+        pytree.save_fig(path, name=plot_name)

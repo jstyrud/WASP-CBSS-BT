@@ -34,7 +34,7 @@ def test_charge_and_light():
                               's(', 'move to CONVEYOR_LIGHT', 'f(', 'pick', 'idle', ')', ')', ')', \
                         'move to DELIVERY', 'place', ')']
 
-    notebook_interface.plot_individual('', 'test', individual)
+    environment.plot_individual('', 'test', individual)
 
     assert environment.get_fitness(individual, show_world=False) > 0.0
 
@@ -50,7 +50,7 @@ def test_charge_and_heavy():
                               's(', 'move to CONVEYOR_HEAVY', 'f(', 'pick', 'idle', ')', ')', ')', \
                         'move to DELIVERY', 'place', ')']
 
-    notebook_interface.plot_individual('', 'test', individual)
+    environment.plot_individual('', 'test', individual)
 
     assert environment.get_fitness(individual, show_world=False) > 0.0
 
@@ -62,7 +62,7 @@ def test_minimal():
 
     individual = ['sm(', 'move to CONVEYOR_HEAVY', 'pick', 'move to DELIVERY', 'place', ')']
 
-    notebook_interface.plot_individual('', 'test', individual)
+    environment.plot_individual('', 'test', individual)
 
     assert environment.get_fitness(individual, show_world=False) > 0.0
 

@@ -138,6 +138,12 @@ logs
 duplo
 Showcase
 gp
+install
+resource
+log
+package.xml
+setup.cfg
+setup.py
 *.sqlite
 *.sln
 *.pyproj

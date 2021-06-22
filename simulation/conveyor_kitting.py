@@ -8,8 +8,10 @@ from enum import IntEnum
 
 MAX_BATTERY = 100
 MAX_WEIGHT = 10
-HEAVY_WEIGHT = 3
-LIGHT_WEIGHT = 1
+MAX_HEAVY = 10
+MAX_LIGHT = 10
+HEAVY_WEIGHT = 4
+LIGHT_WEIGHT = 2
 ROBOT_SPEED = 5
 
 @dataclass
@@ -143,8 +145,10 @@ class Simulation:
         #Randomly add objects on conveyor
         if random.random() < 0.05:
             self.state.cnv_n_heavy += 1
+            self.state.cnv_n_heavy = min(self.state.cnv_n_heavy, MAX_HEAVY)
         if random.random() < 0.1:
             self.state.cnv_n_light += 1
+            self.state.cnv_n_light = min(self.state.cnv_n_light, MAX_LIGHT)
 
         #Deplete battery
         self.state.battery_level -= 1

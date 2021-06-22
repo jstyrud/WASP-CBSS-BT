@@ -173,6 +173,7 @@ class WorldUI:
         return self.var_map
 
 
+
     def init_table(self):
         """
         Add to the table subplot the static elements.

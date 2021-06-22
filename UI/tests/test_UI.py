@@ -30,15 +30,13 @@ def test_object():
 
     assert test.origin == oracle_origin
 
-def test_reset():
+def test_init():
     """
     Test the reset world function.
     The feedback is visual, very few assertions.
     """
     world = ui.WorldUI()
-    world.reset_world()
     world.save_world('UI/tests/empty_world')
-    plt.close()
 
 def test_robot():
     """
@@ -52,12 +50,10 @@ def test_robot():
     robotDel = (21,7.5)
     """
     world = ui.WorldUI()
-    world.reset_world()
-    world.add_robot((2, 7.5))
+    world.update_robot((23, 12))
     world.save_world('UI/tests/robot')
     world.reset_world()
     world.save_world('UI/tests/empty_again')
-    plt.close()
 
 def test_items():
     """
@@ -65,36 +61,19 @@ def test_items():
     The feedback is visual, very few assertions.
     """
     world = ui.WorldUI()
-    world.reset_world()
-    world.add_items(2, 3)
+    world.update_items(5, 3)
     world.save_world('UI/tests/items')
     world.reset_world()
     world.save_world('UI/tests/empty_again')
-    plt.close()
-
-def test_state():
-    """
-    Test figures printing with state object.
-    """
-    state = simulation.WorldState()
-    state.robot_pos = simulation.Pos(23, 12)
-    state.cnv_n_light = 7
-    state.cnv_n_heavy = 4
-    world = ui.WorldUI()
-    world.add_state(state)
-    world.save_world('UI/tests/state')
-    plt.close()
-
-    state.robot_pos = simulation.Pos(21, 7.5)
-    state.cnv_n_light = 3
-    state.cnv_n_heavy = 4
-    world.add_state(state)
-    world.save_world('UI/tests/new_state')
-    plt.close()
+    world.update_items(1, 8)
+    world.save_world('UI/tests/new_items')
+    world.update_items(0, 2)
+    world.save_world('UI/tests/few_items')
 
 def test_table():
     """
-    Test the table with world state information
+    Test the update text function.
+    The feedback is visual, very few assertions.
     """
     state = simulation.WorldState()
     state.robot_pos = simulation.Pos(23, 12)
@@ -107,32 +86,46 @@ def test_table():
     state.delivered_heavy = 51
     state.delivered_light = 52
     world = ui.WorldUI()
-    world.add_state(state)
+    world.update_text(state)
     world.save_world('UI/tests/table')
-
-def test_plot():
-    """
-    Test if a figure can be output.
-    """
-    world = ui.WorldUI()
     world.reset_world()
-    world.plot_world()
+    world.save_world('UI/tests/empty_again')
+
+def test_state():
+    """
+    Test figures printing with state object.
+    """
+    state = simulation.WorldState()
+    state.robot_pos = simulation.Pos(23, 12)
+    state.cnv_n_light = 7
+    state.cnv_n_heavy = 4
+    world = ui.WorldUI()
+    world.add_state(state)
+    world.save_world('UI/tests/state')
+
+    state.robot_pos = simulation.Pos(21, 7.5)
+    state.cnv_n_light = 3
+    state.cnv_n_heavy = 4
+    world.add_state(state)
+    world.save_world('UI/tests/new_state')
 
 def test_animate():
     """
-    Test animating world progression
+    Test animating world progression.
     """
     state = simulation.WorldState()
     state.robot_pos = simulation.Pos(23, 12)
     state.cnv_n_light = 3
     state.cnv_n_heavy = 4
     world = ui.WorldUI()
-    world.add_state(state, animated=True)
-    world.plot_world()
+    world.add_state(state)
+    world.save_world('UI/tests/snap1')
+    #world.plot_world()
 
     state.robot_pos = simulation.Pos(21, 7.5)
     state.cnv_n_light = 1
     state.cnv_n_heavy = 1
-    world.add_state(state, animated=True)
-    world.plot_world()
-    world.animate()
+    world.add_state(state)
+    world.save_world('UI/tests/snap2')
+    #world.plot_world()
+    #world.animate()

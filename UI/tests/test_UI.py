@@ -122,6 +122,7 @@ def test_animate():
     #world.save_world('UI/tests/snap1')
     world.plot_world()
 
+    
     state.robot_pos = simulation.Pos(21, 7.5)
     state.cnv_n_light = 1
     state.cnv_n_heavy = 1

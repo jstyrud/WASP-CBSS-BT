@@ -23,13 +23,13 @@ You only get to submit once per group, so make it count! You will of course be a
 ## Available behaviors
 Only a specified set of behaviors can be used as listed below.
 ### Control nodes
-#### ‘f(‘
+#### ‘f(’
 Fallback node without memory. All subsequent nodes up to an ending ‘)’ are part of the subtree.
-#### ‘fm(‘
+#### ‘fm(’
 Fallback node with memory. All subsequent nodes up to an ending ‘)’ are part of the subtree.
-#### ‘s(‘
+#### ‘s(’
 Sequence node without memory. All subsequent nodes up to an ending ‘)’ are part of the subtree.
-#### ‘sm(‘
+#### ‘sm(’
 Sequence node with memory. All subsequent nodes up to an ending ‘)’ are part of the subtree.
 
 ### Condition nodes
@@ -38,22 +38,22 @@ Checks if robot is currently at \<STATION>. \<STATION> can be any of the followi
 
 Returns SUCCESS if robot is at the station, FAILURE otherwise.
 
-#### ‘battery level \<value>?‘
+#### ‘battery level \<value>?’
 Checks if battery level is currently above or below the given value. Example ‘battery level > 4’ returns SUCCESS if battery level is above 4, FAILURE otherwise while ‘battery level < 4’ returns SUCCESS if battery level is below 4, FAILURE otherwise.
 
-#### ‘carried weight \<value>?‘
+#### ‘carried weight \<value>?’
 Checks if the robots currently carried weight is above or below the given value. Works like the battery level behavior.
 
-#### ‘carried light \<value>?‘
+#### ‘carried light \<value>?’
 Checks if the number of currently carried light objects is above or below the given value. Works like the battery level behavior.
 
-#### ‘carried heavy \<value>?‘
+#### ‘carried heavy \<value>?’
 Checks if the number currently carried heavy objects is above or below the given value. Works like the battery level behavior.
 
-#### ‘conveyor light \<value>?‘
+#### ‘conveyor light \<value>?’
 Checks if the number of objects currently on the light conveyor is above or below the given value. Works like the battery level behavior.
 
-#### ‘conveyor heavy \<value>?‘
+#### ‘conveyor heavy \<value>?’
 Checks if the number of objects currently on the heavy conveyor is above or below the given value. Works like the battery level behavior.
 
 ### Action nodes

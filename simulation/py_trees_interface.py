@@ -98,7 +98,6 @@ class PyTree(pt.trees.BehaviourTree):
         status_ok = True
         if show_world:
             world = draw_world.WorldUI()
-            world.reset_world()
 
         start = time.time()
 
@@ -154,7 +153,6 @@ class PyTree(pt.trees.BehaviourTree):
         status_ok = True
         if show_world:
             world = draw_world.WorldUI()
-            world.reset_world()
 
         status_ok = self.world_interface.get_feedback() #Wait for connection
 

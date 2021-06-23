@@ -119,13 +119,14 @@ def test_animate():
     state.cnv_n_heavy = 4
     world = ui.WorldUI()
     world.add_state(state)
-    world.save_world('UI/tests/snap1')
-    #world.plot_world()
+    #world.save_world('UI/tests/snap1')
+    world.plot_world()
 
+    
     state.robot_pos = simulation.Pos(21, 7.5)
     state.cnv_n_light = 1
     state.cnv_n_heavy = 1
     world.add_state(state)
-    world.save_world('UI/tests/snap2')
-    #world.plot_world()
-    #world.animate()
+    #world.save_world('UI/tests/snap2')
+    world.plot_world()
+    world.animate(path='UI/tests/animation.gif')

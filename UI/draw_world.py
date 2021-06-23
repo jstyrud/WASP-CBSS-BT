@@ -311,9 +311,9 @@ class WorldUI:
         self.camera.snap()
 
 
-    def animate(self):
+    def animate(self, path='./animation.gif'):
         """
         Save an animated gif of the world, one frame per tick
         """
         animation = self.camera.animate()
-        animation.save('UI/tests/animation.gif', writer='imagemagick')
+        animation.save(path, writer='imagemagick')

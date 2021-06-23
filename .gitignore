@@ -127,3 +127,34 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Logs extensions
+logs/
+
+!.gitignore
+.vs
+env
+logs
+duplo
+Showcase
+gp
+install
+resource
+log
+package.xml
+setup.cfg
+setup.py
+main.py
+*.sqlite
+*.sln
+*.pyproj
+*.dot
+*.png
+*.svg
+*.pdf
+*.gif
+*.coverage
+*.pyperf
+*.mp4
+__pycache__
+TestResults

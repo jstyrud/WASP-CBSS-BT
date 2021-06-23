@@ -3,8 +3,9 @@
 Test routines for the UI
 """
 
-import UI.draw_world as ui
 import matplotlib.pyplot as plt
+import UI.draw_world as ui
+import simulation.conveyor_kitting as simulation
 
 def test_object():
     """
@@ -29,15 +30,13 @@ def test_object():
 
     assert test.origin == oracle_origin
 
-def test_reset():
+def test_init():
     """
     Test the reset world function.
     The feedback is visual, very few assertions.
     """
     world = ui.WorldUI()
-    world.reset_world()
-    world.print_world('empty_world')
-    plt.close()
+    world.save_world('UI/tests/empty_world')
 
 def test_robot():
     """
@@ -51,12 +50,10 @@ def test_robot():
     robotDel = (21,7.5)
     """
     world = ui.WorldUI()
+    world.update_robot((23, 12))
+    world.save_world('UI/tests/robot')
     world.reset_world()
-    world.add_robot((2,7.5))
-    world.print_world('robot')
-    world.reset_world()
-    world.print_world('empty_again')
-    plt.close()
+    world.save_world('UI/tests/empty_again')
 
 def test_items():
     """
@@ -64,19 +61,72 @@ def test_items():
     The feedback is visual, very few assertions.
     """
     world = ui.WorldUI()
+    world.update_items(5, 3)
+    world.save_world('UI/tests/items')
     world.reset_world()
-    world.add_items(2, 3)
-    world.print_world('items')
-    world.reset_world()
-    world.print_world('empty_again')
-    plt.close()
+    world.save_world('UI/tests/empty_again')
+    world.update_items(1, 8)
+    world.save_world('UI/tests/new_items')
+    world.update_items(0, 2)
+    world.save_world('UI/tests/few_items')
 
-def test_output():
+def test_table():
     """
-    Test if a figure can be output.
+    Test the update text function.
+    The feedback is visual, very few assertions.
     """
+    state = simulation.WorldState()
+    state.robot_pos = simulation.Pos(23, 12)
+    state.cnv_n_light = 3
+    state.cnv_n_heavy = 4
+    state.battery_level = 100
+    state.carried_heavy = 10
+    state.carried_light = 20
+    state.carried_weight = 30
+    state.delivered_heavy = 51
+    state.delivered_light = 52
     world = ui.WorldUI()
+    world.update_text(state)
+    world.save_world('UI/tests/table')
     world.reset_world()
-    fig, ax = world.get_figure()
-    ax.plot()
-    plt.show()
+    world.save_world('UI/tests/empty_again')
+
+def test_state():
+    """
+    Test figures printing with state object.
+    """
+    state = simulation.WorldState()
+    state.robot_pos = simulation.Pos(23, 12)
+    state.cnv_n_light = 7
+    state.cnv_n_heavy = 4
+    world = ui.WorldUI()
+    world.add_state(state)
+    world.save_world('UI/tests/state')
+
+    state.robot_pos = simulation.Pos(21, 7.5)
+    state.cnv_n_light = 3
+    state.cnv_n_heavy = 4
+    world.add_state(state)
+    world.save_world('UI/tests/new_state')
+
+def test_animate():
+    """
+    Test animating world progression.
+    """
+    state = simulation.WorldState()
+    state.robot_pos = simulation.Pos(23, 12)
+    state.cnv_n_light = 3
+    state.cnv_n_heavy = 4
+    world = ui.WorldUI()
+    world.add_state(state)
+    #world.save_world('UI/tests/snap1')
+    world.plot_world()
+
+    
+    state.robot_pos = simulation.Pos(21, 7.5)
+    state.cnv_n_light = 1
+    state.cnv_n_heavy = 1
+    world.add_state(state)
+    #world.save_world('UI/tests/snap2')
+    world.plot_world()
+    world.animate(path='UI/tests/animation.gif')

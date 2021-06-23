@@ -1,0 +1,31 @@
+fallback_nodes:
+    - 'f('
+    - 'fm('
+sequence_nodes:
+    - 's('  
+    - 'sm('            
+condition_nodes:
+    - 'at station CHARGE1?'
+    - 'at station CHARGE2?'
+    - 'at station CONVEYOR_HEAVY?'
+    - 'at station CONVEYOR_LIGHT?'
+    - 'at station DELIVERY?'
+parameterized_condition_nodes:
+    battery level: {min: 0, max: 100, step: 10}
+    carried weight: {min: 0, max: 10, step: 1}
+    carried light: {min: 0, max: 10, step: 1}
+    carried heavy: {min: 0, max: 10, step: 1}
+    conveyor light: {min: 0, max: 10, step: 1}
+    conveyor heavy: {min: 0, max: 10, step: 1}
+action_nodes:
+    - 'idle!'
+    - 'charge!'
+    - 'move to CHARGE1!'
+    - 'move to CHARGE2!'
+    - 'move to CONVEYOR_HEAVY!'
+    - 'move to CONVEYOR_LIGHT!'
+    - 'move to DELIVERY!'
+    - 'pick!'
+    - 'place!'
+up_node:
+    - ')'

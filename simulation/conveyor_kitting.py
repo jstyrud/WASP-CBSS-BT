@@ -162,6 +162,8 @@ class Simulation:
 
         #Deplete battery
         self.state.battery_level -= 1
+        if self.state.battery_level < 0:
+            self.state.battery_level = 0
 
         #Only one action per tick
         self.ready_for_action = False

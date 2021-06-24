@@ -165,7 +165,7 @@ class Simulation:
 
         #Only one action per tick
         self.ready_for_action = False
-        self.tick += 1
+        self.state.tick += 1
 
     def at_station(self, station):
         """ Checks if robot is currently at given station """

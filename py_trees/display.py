@@ -370,7 +370,8 @@ def dot_tree(
         visibility_level: common.VisibilityLevel=common.VisibilityLevel.DETAIL,
         collapse_decorators: bool=False,
         with_blackboard_variables: bool=False,
-        with_qualified_names: bool=False):
+        with_qualified_names: bool=False,
+        static: bool=True):
     """
     Paint your tree on a pydot graph.
 
@@ -382,6 +383,7 @@ def dot_tree(
         collapse_decorators (optional): only show the decorator (not the child), defaults to False
         with_blackboard_variables (optional): add nodes for the blackboard variables
         with_qualified_names (optional): print the class information for each behaviour in each node, defaults to False
+        static (optional): if False, it prints the tree with the color code depending on the running status
 
     Returns:
         pydot.Dot: graph
@@ -393,19 +395,19 @@ def dot_tree(
             # convert the pydot graph to a string object
             print("{}".format(py_trees.display.dot_graph(root).to_string()))
     """
-    def get_node_attributes(node):
+    def get_node_attributes(node, static=True):
         blackbox_font_colours = {common.BlackBoxLevel.DETAIL: "dodgerblue",
                                  common.BlackBoxLevel.COMPONENT: "lawngreen",
                                  common.BlackBoxLevel.BIG_PICTURE: "white"
                                  }
         if isinstance(node, composites.Selector):
-            if node.status.value is not 'INVALID':
+            if not static:
                 color_ = get_status_color(node)
                 attributes = ('octagon', color_, 'black')  # octagon
             else:
                 attributes = ('octagon', 'cyan', 'black')  # octagon
         elif isinstance(node, composites.Sequence):
-            if node.status.value is not 'INVALID':
+            if not static:
                 color_ = get_status_color(node)
                 attributes = ('box', color_, 'black')
             else:
@@ -414,8 +416,8 @@ def dot_tree(
             attributes = ('parallelogram', 'gold', 'black')
         elif isinstance(node, decorators.Decorator):
             attributes = ('ellipse', 'ghostwhite', 'black')
-        else:
-            if node.status.value is not 'INVALID':
+        else: # actions and conditions
+            if not static:
                 color_ = get_status_color(node)
                 attributes = ('ellipse', color_, 'black')
             else:
@@ -438,6 +440,8 @@ def dot_tree(
             color = 'red'
         elif node.status.value == 'RUNNING':
             color = 'yellow'
+        else: # INVALID
+            color = 'lightgray'
 
         return color
 
@@ -486,7 +490,7 @@ def dot_tree(
     graph.set_graph_defaults(fontname='times-roman')  # splines='curved' is buggy on 16.04, but would be nice to have
     graph.set_node_defaults(fontname='times-roman')
     graph.set_edge_defaults(fontname='times-roman')
-    (node_shape, node_colour, node_font_colour) = get_node_attributes(root)
+    (node_shape, node_colour, node_font_colour) = get_node_attributes(root, static)
     node_name = root.name
     node_root = pydot.Node(
         name=root.name,
@@ -500,13 +504,13 @@ def dot_tree(
     graph.add_node(node_root)
     behaviour_id_name_map = {root.id: root.name}
 
-    def add_children_and_edges(root, root_node, root_dot_name, visibility_level, collapse_decorators):
+    def add_children_and_edges(root, root_node, root_dot_name, visibility_level, collapse_decorators, static=True):
         if isinstance(root, decorators.Decorator) and collapse_decorators:
             return
         if visibility_level < root.blackbox_level:
             node_names = []
             for c in root.children:
-                (node_shape, node_colour, node_font_colour) = get_node_attributes(c)
+                (node_shape, node_colour, node_font_colour) = get_node_attributes(c, static)
                 node_name = c.name
                 while node_name in behaviour_id_name_map.values():
                     node_name += " "
@@ -528,9 +532,9 @@ def dot_tree(
                 edge = pydot.Edge(root_dot_name, node_name)
                 graph.add_edge(edge)
                 if c.children != []:
-                    add_children_and_edges(c, node, node_name, visibility_level, collapse_decorators)
+                    add_children_and_edges(c, node, node_name, visibility_level, collapse_decorators, static)
 
-    add_children_and_edges(root, node_root, root.name, visibility_level, collapse_decorators)
+    add_children_and_edges(root, node_root, root.name, visibility_level, collapse_decorators, static)
 
     def create_blackboard_client_node(blackboard_client: blackboard.Blackboard):
         return pydot.Node(
@@ -634,7 +638,8 @@ def render_dot_tree(root: behaviour.Behaviour,
                     name: str=None,
                     target_directory: str=os.getcwd(),
                     with_blackboard_variables: bool=False,
-                    with_qualified_names: bool=False):
+                    with_qualified_names: bool=False,
+                    static: bool=True):
     """
     Render the dot tree to .dot, .svg, .png. files in the current
     working directory. These will be named with the root behaviour name.
@@ -646,6 +651,7 @@ def render_dot_tree(root: behaviour.Behaviour,
         target_directory: default is to use the current working directory, set this to redirect elsewhere
         with_blackboard_variables: add nodes for the blackboard variables
         with_qualified_names: print the class names of each behaviour in the dot node
+        static (optional): if False, it prints the tree with the color code depending on the running status
     Example:
         Render a simple tree to dot/svg/png file:
         .. graphviz:: dot/sequence.dot
@@ -665,7 +671,7 @@ def render_dot_tree(root: behaviour.Behaviour,
     graph = dot_tree(
         root, visibility_level, collapse_decorators,
         with_blackboard_variables=with_blackboard_variables,
-        with_qualified_names=with_qualified_names)
+        with_qualified_names=with_qualified_names, static=static)
     filename_wo_extension_to_convert = root.name if name is None else name
     filename_wo_extension = utilities.get_valid_filename(filename_wo_extension_to_convert)
     filenames = {}

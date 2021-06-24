@@ -97,7 +97,7 @@ class PyTree(pt.trees.BehaviourTree):
         successes = 0
         status_ok = True
         if show_world:
-            world = draw_world.WorldUI()
+            world = draw_world.WorldUI(animate=True)
 
         start = time.time()
 
@@ -114,8 +114,7 @@ class PyTree(pt.trees.BehaviourTree):
                 self.world_interface.send_references()
 
                 if show_world:
-                    world.add_state(self.world_interface.state)
-                    world.plot_world()
+                    world.animate_state(self.world_interface.state)
 
                 ticks += 1
                 if self.root.status is pt.common.Status.SUCCESS:
@@ -162,7 +161,6 @@ class PyTree(pt.trees.BehaviourTree):
 
             if show_world:
                 world.add_state(self.world_interface.state)
-                world.plot_world()
 
         return status_ok
 

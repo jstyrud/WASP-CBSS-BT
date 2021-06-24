@@ -290,6 +290,9 @@ class WorldUI:
         self.update_robot((world_state.robot_pos.x, world_state.robot_pos.y))
         self.update_text(world_state)
 
+        self.map_ax.plot()
+        self.text_ax.plot()
+
 
     def save_world(self, name):
         """

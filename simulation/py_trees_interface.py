@@ -166,8 +166,8 @@ class PyTree(pt.trees.BehaviourTree):
 
         return status_ok
 
-    def save_fig(self, path, name='Behavior tree'):
+    def save_fig(self, path, name='Behavior tree', static=True):
         """
         Saves the tree as a figure
         """
-        pt.display.render_dot_tree(self.root, name=name, target_directory=path)
+        pt.display.render_dot_tree(self.root, name=name, target_directory=path, static=static)

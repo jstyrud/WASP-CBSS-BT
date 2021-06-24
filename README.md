@@ -67,7 +67,7 @@ If the robot is at any of the charging stations it will charge, adding 10 to the
 If the robot is at any of the conveyors, and there is an object there that the robot can carry without exceeding the weight limit it will pick it up and return RUNNING for one step, otherwise returns FAILURE. Only picks one object per time step.
 
 #### ‘place!’
-If the robot is at the delivery table and is carrying at least one object it will place all objects on the delivery table and return RUNNING for one time step, otherwise returns FAILURE. Places all currently held objects in one time step.
+If the robot is at the delivery table it will place all objects on the delivery table and return RUNNING for one time step, otherwise returns FAILURE. Places all currently held objects in one time step. Returns SUCCESS regardless of whether any objects are actually carried and then placed.
 
 #### ‘move to \<STATION>!’
 Move towards the given station with a maximum speed of 5. Only moves in either x or y direction any given time step. A movement of 1 in x and 1 in y will therefore take 2 timesteps even if total distance is less than 5. \<STATION> can be any of the following five: CHARGE1, CHARGE2, CONVEYOR_HEAVY, CONVEYOR_LIGHT, DELIVERY.

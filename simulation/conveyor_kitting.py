@@ -27,6 +27,7 @@ class WorldState:
     """
     The complete world state:
     """
+    tick: int = 0
     robot_pos: Pos = field(default_factory=Pos)
     battery_level: int = MAX_BATTERY
     carried_weight: int = 0
@@ -164,6 +165,7 @@ class Simulation:
 
         #Only one action per tick
         self.ready_for_action = False
+        self.tick += 1
 
     def at_station(self, station):
         """ Checks if robot is currently at given station """

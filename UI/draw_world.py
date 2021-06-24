@@ -28,17 +28,18 @@ class TableVars(IntEnum):
     """
     Variable objects in the Table UI.
     """
-    ROBOT_POSE = 0
-    BATTERY_LV = 1
-    CARRIED = 2
-    CARRIED_L = 3
-    CARRIED_H = 4
-    CONV_H = 5
-    CONV_L = 6
-    DEL_H = 7
-    DEL_L = 8
-    BLOCK_H = 9
-    BLOCK_L = 10
+    TICK = 0
+    ROBOT_POSE = 1
+    BATTERY_LV = 2
+    CARRIED = 3
+    CARRIED_L = 4
+    CARRIED_H = 5
+    CONV_H = 6
+    CONV_L = 7
+    DEL_H = 8
+    DEL_L = 9
+    BLOCK_H = 10
+    BLOCK_L = 11
 
 
 class Object:
@@ -185,6 +186,7 @@ class WorldUI:
         self.text_ax.add_patch(Rectangle(self.map.origin, self.map.length/3, self.map.height, \
             edgecolor='white', facecolor='white'))
 
+        self.text_ax.text(1, 15, 'TICK')
         self.text_ax.text(1, 14, 'robot pose')
         self.text_ax.text(1, 13, 'battery lv')
         self.text_ax.text(1, 12, 'carried weight')
@@ -198,6 +200,7 @@ class WorldUI:
         self.text_ax.text(1, 4, 'blocked light')
 
         self.var_tab = [None]*(len(TableVars))
+        self.var_tab[TableVars.TICK] = self.text_ax.text(7, 15, '0')
         self.var_tab[TableVars.ROBOT_POSE] = self.text_ax.text(7, 14, '(?, ?)')
         self.var_tab[TableVars.BATTERY_LV] = self.text_ax.text(7, 13, '?')
         self.var_tab[TableVars.CARRIED] = self.text_ax.text(7, 12, '0')
@@ -264,6 +267,7 @@ class WorldUI:
         """
         if world_state is not None:
             robot_pos = (world_state.robot_pos.x, world_state.robot_pos.y)
+            self.var_tab[TableVars.TICK].set_text(str(world_state.tick))
             self.var_tab[TableVars.ROBOT_POSE].set_text(str(robot_pos))
             self.var_tab[TableVars.BATTERY_LV].set_text(str(world_state.battery_level))
             self.var_tab[TableVars.CARRIED].set_text(str(world_state.carried_weight))
@@ -276,6 +280,7 @@ class WorldUI:
             self.var_tab[TableVars.BLOCK_H].set_text(str(world_state.blocked_heavy))
             self.var_tab[TableVars.BLOCK_L].set_text(str(world_state.blocked_light))
         else:
+            self.var_tab[TableVars.TICK].set_text(str('0'))
             self.var_tab[TableVars.ROBOT_POSE].set_text('(?, ?)')
             self.var_tab[TableVars.BATTERY_LV].set_text('?')
             self.var_tab[TableVars.CARRIED].set_text('0')
@@ -401,6 +406,7 @@ class WorldUI:
         self.text_ax.add_patch(Rectangle(self.map.origin, self.map.length/3, self.map.height, \
             edgecolor='white', facecolor='white'))
 
+        self.text_ax.text(1, 15, 'TICK')
         self.text_ax.text(1, 14, 'robot pose')
         self.text_ax.text(1, 13, 'battery lv')
         self.text_ax.text(1, 12, 'carried weight')
@@ -414,6 +420,7 @@ class WorldUI:
         self.text_ax.text(1, 4, 'blocked light')
 
         self.var_tab = [None]*(len(TableVars))
+        self.var_tab[TableVars.TICK] = self.text_ax.text(7, 15, world_state.tick)
         self.var_tab[TableVars.ROBOT_POSE] = self.text_ax.text(7, 14, pose)
         self.var_tab[TableVars.BATTERY_LV] = self.text_ax.text(7, 13, str(world_state.battery_level))
         self.var_tab[TableVars.CARRIED] = self.text_ax.text(7, 12, str(world_state.carried_weight))

@@ -37,6 +37,8 @@ class TableVars(IntEnum):
     CONV_L = 6
     DEL_H = 7
     DEL_L = 8
+    BLOCK_H = 9
+    BLOCK_L = 10
 
 
 class Object:
@@ -192,6 +194,8 @@ class WorldUI:
         self.text_ax.text(1, 8, 'light in conveyor')
         self.text_ax.text(1, 7, 'delivered heavy')
         self.text_ax.text(1, 6, 'delivered light')
+        self.text_ax.text(1, 5, 'blocked heavy')
+        self.text_ax.text(1, 4, 'blocked light')
 
         self.var_tab = [None]*(len(TableVars))
         self.var_tab[TableVars.ROBOT_POSE] = self.text_ax.text(7, 14, '(?, ?)')
@@ -203,6 +207,8 @@ class WorldUI:
         self.var_tab[TableVars.CONV_L] = self.text_ax.text(7, 8, '0')
         self.var_tab[TableVars.DEL_H] = self.text_ax.text(7, 7, '0')
         self.var_tab[TableVars.DEL_L] = self.text_ax.text(7, 6, '0')
+        self.var_tab[TableVars.BLOCK_H] = self.text_ax.text(7, 5, '0')
+        self.var_tab[TableVars.BLOCK_L] = self.text_ax.text(7, 4, '0')
 
         # Hide axes
         self.text_ax.get_xaxis().set_visible(False)
@@ -267,6 +273,8 @@ class WorldUI:
             self.var_tab[TableVars.CONV_L].set_text(str(world_state.cnv_n_light))
             self.var_tab[TableVars.DEL_H].set_text(str(world_state.delivered_heavy))
             self.var_tab[TableVars.DEL_L].set_text(str(world_state.delivered_light))
+            self.var_tab[TableVars.BLOCK_H].set_text(str(world_state.blocked_heavy))
+            self.var_tab[TableVars.BLOCK_L].set_text(str(world_state.blocked_light))
         else:
             self.var_tab[TableVars.ROBOT_POSE].set_text('(?, ?)')
             self.var_tab[TableVars.BATTERY_LV].set_text('?')
@@ -277,6 +285,8 @@ class WorldUI:
             self.var_tab[TableVars.CONV_L].set_text('0')
             self.var_tab[TableVars.DEL_H].set_text('0')
             self.var_tab[TableVars.DEL_L].set_text('0')
+            self.var_tab[TableVars.BLOCK_H].set_text('0')
+            self.var_tab[TableVars.BLOCK_L].set_text('0')
 
 
     def add_state(self, world_state):
@@ -400,6 +410,8 @@ class WorldUI:
         self.text_ax.text(1, 8, 'light in conveyor')
         self.text_ax.text(1, 7, 'delivered heavy')
         self.text_ax.text(1, 6, 'delivered light')
+        self.text_ax.text(1, 5, 'blocked heavy')
+        self.text_ax.text(1, 4, 'blocked light')
 
         self.var_tab = [None]*(len(TableVars))
         self.var_tab[TableVars.ROBOT_POSE] = self.text_ax.text(7, 14, pose)
@@ -411,6 +423,8 @@ class WorldUI:
         self.var_tab[TableVars.CONV_L] = self.text_ax.text(7, 8, str(world_state.cnv_n_light))
         self.var_tab[TableVars.DEL_H] = self.text_ax.text(7, 7, str(world_state.delivered_heavy))
         self.var_tab[TableVars.DEL_L] = self.text_ax.text(7, 6, str(world_state.delivered_light))
+        self.var_tab[TableVars.BLOCK_H] = self.text_ax.text(7, 5, str(world_state.blocked_heavy))
+        self.var_tab[TableVars.BLOCK_L] = self.text_ax.text(7, 4, str(world_state.blocked_light))
 
         # Hide axes
         self.text_ax.get_xaxis().set_visible(False)

@@ -2,8 +2,6 @@
 """
 Test routines for the UI
 """
-
-import matplotlib.pyplot as plt
 import UI.draw_world as ui
 import simulation.conveyor_kitting as simulation
 

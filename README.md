@@ -2,6 +2,7 @@
 
 ## Objective
 Your goal in this exercise is to construct a Behavior Tree (BT) that controls a mobile robot transferring objects from two conveyors to a delivery table. The two conveyors hold two different items. The top conveyor holds heavy objects which give a higher reward but due to their weight, the robot cannot carry as many. The bottom conveyor holds lighter objects. The robot also has a battery that needs to be recharged repeatedly. If the robot runs out of battery, it will no longer be able to move and no more objects can be transported. The behavior tree needs to find the best trade-off and decide when to perform each action.
+![image](https://github.com/jstyrud/WASP-CBSS-BT/blob/main/environment.png)
 
 ## Setup the Environment and complete the challenge!
 Go to https://github.com/jstyrud/WASP-CBSS-BT for all source code necessary. All you need to do is load the `runme.ipynb` [notebook](https://github.com/jstyrud/WASP-CBSS-BT/blob/main/runme.ipynb) and run it in some environment of your choice, we suggest [Colaboratory](https://colab.research.google.com/). Every other environment running the notebook is also fine but it might require some more preparation steps we do not provide instructions nor support for. Note that to run Colab you need to have a Google account.
@@ -32,12 +33,12 @@ Each episode will run for 200 steps, with the tree being ticked 200 times. New o
 After the episode you will be given a reward based on performance. For every heavy object delivered to the delivery table, 2 points are awarded. For every light object you will get 1 point. If at any given time step a conveyor is full when an object would otherwise have spawned, the rest of the factory is kept waiting and you receive a penalty of -0.5 points for blocked heavy objects and -0.25 points for blocked light objects. Finally we will remove 0.2 points for every node in the behavior tree so smaller trees are better.
 
 ### Example
-You delivered 1 heavy object and 3 light objects, but you were to slow so 2 heavy objects were blocked and 10 light objects. Your tree consists of 25 nodes. The total score becomes:
+You delivered 1 heavy object and 3 light objects, but you were to slow so 2 heavy objects were blocked and 10 light objects. Your tree consists of 25 nodes. The total fitness becomes:
 2 * 1 + 1 * 3 – 0.5 * 2 – 0.25 * 10 – 0.2 * 25 = -3.5
 
 
 ## Submitting your behavior tree and getting a score.
-Send an e-mail to jstyrud@kth.se and write your group name in the subject. Also put the names of all members of your group in the e-mail. We will then run your behavior tree on 100 episodes with different random seeds and your score is the average of those 100 episodes (tree size penalty is given every episode). We will then put your score up for everyone to see on this [document](https://docs.google.com/spreadsheets/d/1QsGNwj7DgN3P_k7Fnsj1gEzuOy0UmRV8gDhnfegFgFY/edit?usp=sharing), so that you can see how your solution compares to other..
+Send an e-mail to jstyrud@kth.se and write your group name in the subject. Also put the names of all members of your group in the e-mail. We will then run your behavior tree on 100 episodes with different random seeds and your fitness is the average of those 100 episodes (tree size penalty is given every episode). We will then put your fitness up for everyone to see on this [document](https://docs.google.com/spreadsheets/d/1QsGNwj7DgN3P_k7Fnsj1gEzuOy0UmRV8gDhnfegFgFY/edit?usp=sharing), so that you can see how your solution compares to others.
 You only get to submit once per group, so make it count! You will of course be able to test run a lot of different seeds by yourselves to make it robust, but we will not be giving any information on which seeds are run by us.
 
 ## Available behaviors

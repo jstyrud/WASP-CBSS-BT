@@ -17,8 +17,10 @@ class Environment():
         self.world_interface = None
         self.pytree = None
 
-    def get_fitness(self, individual, max_ticks=200, show_world=False):
+    def get_fitness(self, individual, max_ticks=200, show_world=False, seed=None):
         """ Run the simulation and return the fitness """
+        if seed is not None:
+            self.seed = seed
         self.world_interface = sm.Simulation(seed=self.seed)
         self.pytree = PyTree(individual[:], behaviors=behaviors, \
             world_interface=self.world_interface, verbose=self.verbose)

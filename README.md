@@ -38,7 +38,7 @@ You delivered 1 heavy object and 3 light objects, but you were to slow so 2 heav
 
 
 ## Submitting your behavior tree and getting a score.
-Send an e-mail to jstyrud@kth.se and write your group name in the subject. Also put the names of all members of your group in the e-mail. We will then run your behavior tree on 100 episodes with different random seeds and your fitness is the average of those 100 episodes (tree size penalty is given every episode). We will then put your fitness up for everyone to see on this [document](https://docs.google.com/spreadsheets/d/1QsGNwj7DgN3P_k7Fnsj1gEzuOy0UmRV8gDhnfegFgFY/edit?usp=sharing), so that you can see how your solution compares to others.
+Send an e-mail to jstyrud@kth.se and write your group name in the subject. Also put the names of all members of your group in the e-mail. The deadline is 08.00 on Friday morning the 27th. We will then run your behavior tree on 100 episodes with different random seeds and your fitness is the average of those 100 episodes (tree size penalty is given every episode). We will then put your fitness up for everyone to see on this [document](https://docs.google.com/spreadsheets/d/1QsGNwj7DgN3P_k7Fnsj1gEzuOy0UmRV8gDhnfegFgFY/edit?usp=sharing), so that you can see how your solution compares to others.
 You only get to submit once per group, so make it count! You will of course be able to test run a lot of different seeds by yourselves to make it robust, but we will not be giving any information on which seeds are run by us.
 
 ## Available behaviors

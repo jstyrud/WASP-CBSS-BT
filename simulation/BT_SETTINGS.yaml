@@ -13,8 +13,8 @@ condition_nodes:
 parameterized_condition_nodes:
     battery level: {min: 0, max: 100, step: 10}
     carried weight: {min: 0, max: 10, step: 1}
-    carried light: {min: 0, max: 10, step: 1}
-    carried heavy: {min: 0, max: 10, step: 1}
+    carried light: {min: 0, max: 5, step: 1}
+    carried heavy: {min: 0, max: 2, step: 1}
     conveyor light: {min: 0, max: 10, step: 1}
     conveyor heavy: {min: 0, max: 10, step: 1}
 action_nodes:

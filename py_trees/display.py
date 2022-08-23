@@ -400,18 +400,18 @@ def dot_tree(
                                  common.BlackBoxLevel.COMPONENT: "lawngreen",
                                  common.BlackBoxLevel.BIG_PICTURE: "white"
                                  }
-        if isinstance(node, composites.Selector):
-            if not static:
-                color_ = get_status_color(node)
-                attributes = ('octagon', color_, 'black')  # octagon
-            else:
-                attributes = ('octagon', 'cyan', 'black')  # octagon
-        elif isinstance(node, composites.Sequence):
+        if isinstance(node, composites.Sequence) or 'Sequence' in node.name:
             if not static:
                 color_ = get_status_color(node)
                 attributes = ('box', color_, 'black')
             else:
                 attributes = ('box', 'orange', 'black')
+        elif isinstance(node, composites.Selector):
+            if not static:
+                color_ = get_status_color(node)
+                attributes = ('octagon', color_, 'black')  # octagon
+            else:
+                attributes = ('octagon', 'cyan', 'black')  # octagon
         elif isinstance(node, composites.Parallel):
             attributes = ('parallelogram', 'gold', 'black')
         elif isinstance(node, decorators.Decorator):

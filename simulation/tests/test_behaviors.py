@@ -5,6 +5,67 @@ import py_trees as pt
 import simulation.conveyor_kitting as simulation
 import simulation.behaviors as behaviors
 
+def test_control_nodes():
+    """ Tests control nodes so that they work properly """
+
+    """ Sequence without memory, actually not working because child is reset all the time, pytrees bug """
+    root = pt.composites.Sequence(memory=False)
+    root.add_child(pt.behaviours.TickCounter(1))
+    root.add_child(pt.behaviours.Success('Reached second child'))
+
+    for _ in range(2):
+        root.tick_once()
+        assert root.status.value == "RUNNING"
+
+    """ Our reactive sequence, should be working """
+    root = behaviors.RSequence()
+    root.add_child(pt.behaviours.TickCounter(1))
+    root.add_child(pt.behaviours.Success('Reached second child'))
+
+    root.tick_once()
+    assert root.status.value == "RUNNING"
+    root.tick_once()
+    assert root.status.value == "SUCCESS"
+
+    root = behaviors.RSequence()
+    root.add_child(pt.behaviours.TickCounter(1))
+    root.add_child(pt.behaviours.TickCounter(1))
+
+    for _ in range(6):
+        root.tick_once()
+        assert root.status.value == "RUNNING"
+
+    """ Sequence with memory """
+    root = pt.composites.Sequence(memory=True)
+    root.add_child(pt.behaviours.TickCounter(1))
+    root.add_child(pt.behaviours.Success('Reached second child'))
+
+    root.tick_once()
+    assert root.status.value == "RUNNING"
+    root.tick_once()
+    assert root.status.value == "SUCCESS"
+
+    """ Fallback without memory """
+    root =  pt.composites.Selector(memory=False)
+    root.add_child(pt.behaviours.TickCounter(1, "ticker1", pt.common.Status.FAILURE))
+    root.add_child(pt.behaviours.TickCounter(1, "ticker2"))
+
+    for _ in range(6):
+        root.tick_once()
+        assert root.status.value == "RUNNING"
+
+    """ Fallback with memory """
+    root = pt.composites.Selector(memory=True)
+    root.add_child(pt.behaviours.TickCounter(1, "ticker1", pt.common.Status.FAILURE))
+    root.add_child(pt.behaviours.TickCounter(1, "ticker2"))
+
+    root.tick_once()
+    assert root.status.value == "RUNNING"
+    root.tick_once()
+    assert root.status.value == "RUNNING"
+    root.tick_once()
+    assert root.status.value == "SUCCESS"
+
 def test_at_station():
     """ Tests at station behavior """
     sm = simulation.Simulation()
@@ -209,10 +270,7 @@ def test_pick():
     sm.state.robot_pos = simulation.get_pos(simulation.Stations.CONVEYOR_HEAVY)
     sm.state.cnv_n_heavy = 5
     sm.ready_for_action = True
-    behavior.update()
-    sm.ready_for_action = True
-    assert behavior.update() == pt.common.Status.SUCCESS
-    sm.ready_for_action = True
+    assert behavior.update() == pt.common.Status.RUNNING
     assert sm.state.cnv_n_heavy == 4
     assert sm.state.carried_heavy == 1
     assert sm.state.carried_weight == simulation.HEAVY_WEIGHT
@@ -228,10 +286,10 @@ def test_pick():
     sm.ready_for_action = True
     behavior.update()
     sm.ready_for_action = True
-    assert behavior.update() == pt.common.Status.SUCCESS
-    assert sm.state.cnv_n_light == 3
-    assert sm.state.carried_light == 1
-    assert sm.state.carried_weight == simulation.LIGHT_WEIGHT + simulation.HEAVY_WEIGHT
+    assert behavior.update() == pt.common.Status.RUNNING
+    assert sm.state.cnv_n_light == 2
+    assert sm.state.carried_light == 2
+    assert sm.state.carried_weight == simulation.LIGHT_WEIGHT * 2 + simulation.HEAVY_WEIGHT
 
 def test_place():
     """ Tests place behavior """
@@ -248,8 +306,7 @@ def test_place():
     behavior.initialise()
     sm.state.robot_pos = simulation.get_pos(simulation.Stations.DELIVERY)
     sm.ready_for_action = True
-    behavior.update()
-    assert behavior.update() == pt.common.Status.SUCCESS
+    assert behavior.update() == pt.common.Status.RUNNING
     assert sm.state.carried_heavy == 0
     assert sm.state.carried_light == 0
     assert sm.state.delivered_heavy == 1

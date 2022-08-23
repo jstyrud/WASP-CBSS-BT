@@ -38,7 +38,7 @@ You delivered 1 heavy object and 3 light objects, but you were to slow so 2 heav
 
 
 ## Submitting your behavior tree and getting a score.
-You may work in groups of at most two members. Send an e-mail to jstyrud@kth.se and write your group name in the subject. Also put the names of all members of your group in the e-mail. The deadline is 08.00 on Friday morning the 27th. Your behavior tree will be run on 100 episodes with different random seeds and your fitness is the average of those 100 episodes (tree size penalty is given every episode). We will then put your fitness up for everyone to see on this [document](https://docs.google.com/spreadsheets/d/1QsGNwj7DgN3P_k7Fnsj1gEzuOy0UmRV8gDhnfegFgFY/edit?usp=sharing), so that you can see how your solution compares to others.
+You may work in groups of at most two members. Send an e-mail to jstyrud@kth.se and write your group name in the subject. Also put the names of all members of your group in the e-mail. The deadline is 08.00 on Friday morning the 26th. Your behavior tree will be run on 100 episodes with different random seeds and your fitness is the average of those 100 episodes (tree size penalty is given every episode). We will then put your fitness up for everyone to see on this [document](https://docs.google.com/spreadsheets/d/1QsGNwj7DgN3P_k7Fnsj1gEzuOy0UmRV8gDhnfegFgFY/edit?usp=sharing), so that you can see how your solution compares to others.
 You only get to submit once per group, so make it count! You will of course be able to test run a lot of different seeds by yourselves to make it robust, but we will not be giving any information on which seeds are run by us.
 
 ## Available behaviors
@@ -85,14 +85,14 @@ Does nothing. Always returns RUNNING.
 If the robot is at any of the charging stations it will charge, adding 10 to the current battery level and returning RUNNING. If it’s not at a charging station it will return FAILURE. IF battery is fully charged it returns SUCCESS.
 
 #### ‘pick!’
-If the robot is at any of the conveyors, and there is an object there that the robot can carry without exceeding the weight limit it will pick it up and return RUNNING for one step, otherwise returns FAILURE. Only picks one object per time step.
+If the robot is at any of the conveyors, and there is an object there that the robot can carry without exceeding the weight limit it will pick it up and return RUNNING, otherwise returns FAILURE. Only picks one object per time step.
 
 #### ‘place!’
-If the robot is at the delivery table it will place all objects on the delivery table and return RUNNING for one time step, otherwise returns FAILURE. Places all currently held objects in one time step. Returns SUCCESS regardless of whether any objects are actually carried and then placed.
+If the robot is at the delivery table it will place all objects on the delivery table and return RUNNING, otherwise returns FAILURE. Places all currently held objects in one time step. Returns RUNNING regardless of whether any objects are actually carried and then placed.
 
 #### ‘move to \<STATION>!’
 Move towards the given station with a maximum speed of 5. Only moves in either x or y direction any given time step. A movement of 1 in x and 1 in y will therefore take 2 timesteps even if total distance is less than 5. \<STATION> can be any of the following five: CHARGE1, CHARGE2, CONVEYOR_HEAVY, CONVEYOR_LIGHT, DELIVERY.
-If the robot is already at the station it will return SUCCESS.
+If the robot is already at the station it will return SUCCESS, otherwise it will return RUNNING.
 
 
 

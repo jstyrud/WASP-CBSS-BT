@@ -58,13 +58,15 @@ def test_minimal():
     """
     Testing a minimal useful tree
     """
-    environment = notebook_interface.Environment(seed=0, verbose=True)
+    environment = notebook_interface.Environment(seed=0, verbose=False)
+    idle = ['idle']
+    idle_fitness = environment.get_fitness(idle, show_world=False)
 
-    individual = ['sm(', 'move to CONVEYOR_HEAVY', 'pick', 'move to DELIVERY', 'place', ')']
+    minimal = ['sm(', 'move to CONVEYOR_LIGHT', 'pick', ')']
 
-    environment.plot_individual('', 'test', individual)
-
-    assert environment.get_fitness(individual, show_world=False) > 0.0
+    environment = notebook_interface.Environment(seed=0, verbose=False)
+    minimal_fitness = environment.get_fitness(minimal, show_world=False)
+    assert minimal_fitness > idle_fitness
 
 def test_step():
     """

@@ -13,7 +13,7 @@ In order to setup the notebook in Colab, first open a [new project](https://cola
 Then, to open the `runme.ipynb` notebook, on the top-left toolbar, go to `File`, then `Open Notebook`. This will prompt a window, where you need to select `GitHub` and paste the link to this repository. Colab will automatically recognise the notebook, that you can select to open.
 ![image](https://github.com/jstyrud/WASP-CBSS-BT/blob/main/colab2.png)
 
-Once the notebook is loaded, you have to connect it to your PC resources. You do so by pressing the `Connect` button on the top-right corner.
+Once the notebook is loaded, you have to connect it to some hardware resources. You do so by pressing the `Connect` button on the top-right corner. Running in the free servers is kind of slow, so if you want to you can set up a local runtime, just follow the instructions. Or just skip the notebook and run code in a python file locally which will be even faster.
 
 You will construct the Behavior Trees as string inputs, but in the notebook are functions to show them graphically and to show animations of episodes of the robot being controlled by the behavior tree.  
 An example of a string representation of a BT is (the string symbols are defined in section [Available Behaiviors](#available-behaviors)):
